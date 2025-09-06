@@ -10,6 +10,15 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+	DropdownMenu,
+	DropdownMenuTrigger,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import ThemeToggle from "@/components/Theme/theme-toggle";
 
 const Navbar = () => {
 	return (
@@ -17,7 +26,7 @@ const Navbar = () => {
 			<div className="px-6 md:px-0 container flex h-16 justify-between items-center mx-auto">
 				<div className="flex items-center">
 					<Link href="/" className="flex items-center space-x-2">
-						<MessageSquareIcon className="h-8 w-8 text-foreground" />
+						<MessageSquareIcon className="h-7 w-7 text-foreground" />
 						<span className="font-bold text-2xl inline-block">Threadly</span>
 					</Link>
 				</div>
@@ -28,8 +37,32 @@ const Navbar = () => {
 					</div>
 				</div>
 				<div className="hidden md:flex items-center space-x-4">
+					{/* <Button variant="default" className="font-bold">
+						Create Thread
+					</Button>
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant="outline" size="icon" className="rounded-full">
+								AC
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							<DropdownMenuLabel className="font-bold">
+								My Account
+							</DropdownMenuLabel>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem>My Profile</DropdownMenuItem>
+							<DropdownMenuItem>My Bookmarks</DropdownMenuItem>
+							<DropdownMenuItem>Settings</DropdownMenuItem>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem className="text-red-500 focus:bg-red-500 focus:text-white ">
+								Log Out
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu> */}
 					<Button variant="default">Sign Up</Button>
 					<Button variant="outline">Log In</Button>
+					<ThemeToggle />
 				</div>
 
 				<div className="md:hidden flex items-center">
@@ -44,13 +77,14 @@ const Navbar = () => {
 							<SheetHeader>
 								<SheetTitle className="text-2xl">Threadly</SheetTitle>
 							</SheetHeader>
-							<div className="flex flex-col gap-4  px-4">
-								<div className="relative w-full max-w-md mb-4">
+							<div className="flex flex-col gap-4 px-4">
+								<div className="relative w-full max-w-md mb-3">
 									<Input placeholder="Search threads..." className="pl-10" />
 									<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
 								</div>
 								<Button variant="default">Sign Up</Button>
 								<Button variant="outline">Log In</Button>
+								<ThemeToggle />
 							</div>
 						</SheetContent>
 					</Sheet>
