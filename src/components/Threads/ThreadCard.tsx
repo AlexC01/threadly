@@ -19,7 +19,7 @@ const ThreadCard = () => {
 			</div>
 			<div className="flex flex-col flex-1">
 				<p className="text-muted-foreground text-xs mb-3 md:hidden">
-						Posted by Anonymous#142 - 2 hours ago
+					Posted by Anonymous#142 - 2 hours ago
 				</p>
 				<h2 className="font-bold text-xl mb-4">
 					How can this be even possible with torrentio? I dont Understand
@@ -28,21 +28,21 @@ const ThreadCard = () => {
 					Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque
 					faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi
 					pretium tellus pellentesque sem placerat. In id cursus mi pretium
-					tellus pretium tellus pellentesque sem placerat. In id cursus mi pretium
-					tellus 
+					tellus pretium tellus pellentesque sem placerat. In id cursus mi
+					pretium tellus
 				</p>
 				<div className="mt-6 flex justify-between items-center">
 					<p className="hidden md:block text-muted-foreground text-xs">
 						Posted by Anonymous#142 - 2 hours ago
 					</p>
 					<div className="flex md:hidden flex-row gap-2 items-center">
-					<button type="button">
-					<ArrowBigUp />
-				</button>
-				<span className="block font-bold text-lg text-foreground">44</span>
-				<button type="button">
-					<ArrowBigDown />
-				</button>
+						<button type="button">
+							<ArrowBigUp />
+						</button>
+						<span className="block font-bold text-lg text-foreground">44</span>
+						<button type="button">
+							<ArrowBigDown />
+						</button>
 					</div>
 					<div className="flex items-center gap-2">
 						<MessageCircleMore />
