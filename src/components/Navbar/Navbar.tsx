@@ -22,7 +22,7 @@ import {
 const Navbar = () => {
 	return (
 		<header className="sticky top-0 z-50 w-full border-b-2 border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-			<div className="px-6 md:px-0 container flex h-16 justify-between items-center mx-auto">
+			<div className="px-6 2xl:px-0 max-w-7xl flex h-16 justify-between items-center mx-auto">
 				<div className="flex items-center">
 					<Link href="/" className="flex items-center space-x-2">
 						<MessageSquareIcon className="h-7 w-7 text-foreground" />
@@ -36,9 +36,8 @@ const Navbar = () => {
 					</div>
 				</div>
 				<div className="hidden md:flex items-center space-x-4">
-					{/* <Button variant="default" className="font-bold">
-						Create Thread
-					</Button>
+					<Button variant="default">Create Thread</Button>
+					{/* 
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" size="icon" className="rounded-full">
@@ -59,8 +58,8 @@ const Navbar = () => {
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu> */}
-					<Button variant="default">Sign Up</Button>
-					<Button variant="outline">Log In</Button>
+					<Button variant="outline">Sign Up</Button>
+					<Button variant="destructive">Log In</Button>
 					<ThemeToggle />
 				</div>
 
