@@ -1,7 +1,15 @@
 import { Menu, MessageSquareIcon, Search } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import ThemeToggle from "@/components/Theme/theme-toggle";
 import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
 	Sheet,
@@ -10,15 +18,6 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-	DropdownMenu,
-	DropdownMenuTrigger,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import ThemeToggle from "@/components/Theme/theme-toggle";
 
 const Navbar = () => {
 	return (
