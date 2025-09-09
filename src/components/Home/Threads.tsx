@@ -1,9 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import type { ThreadInterface } from "@/lib/Models/ThreadModel";
 import ThreadCard from "../Threads/ThreadCard";
 
-const Threads = () => {
+interface ThreadsProps {
+	initialThreads: ThreadInterface[];
+}
+
+const Threads = ({ initialThreads }: ThreadsProps) => {
 	const [sort, setSort] = useState("top");
 	const sortOptions = ["top", "new", "hot"];
 	return (
@@ -23,8 +28,9 @@ const Threads = () => {
 				))}
 			</div>
 			<section className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
-				<ThreadCard />
-				<ThreadCard />
+				{initialThreads.map((thread) => (
+					<ThreadCard key={thread.id} thread={thread} />
+				))}
 			</section>
 		</>
 	);

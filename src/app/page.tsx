@@ -3,8 +3,11 @@ import Link from "next/link";
 import Threads from "@/components/Home/Threads";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import { supabase } from "@/lib/supabaseClient";
 
-export default function Home() {
+export default async function Home() {
+	const { data: threads } = await supabase.rpc("get_threads_with_stats");
+
 	return (
 		<main className="min-h-screen">
 			<div className="max-w-7xl mx-auto py-12 md:py-16">
@@ -22,7 +25,7 @@ export default function Home() {
 					</Button>
 				</div>
 				<div className="mt-10 px-4 md:px-8">
-					<Threads />
+					<Threads initialThreads={threads} />
 				</div>
 				<div className="mt-16 text-center">
 					<h2 className="text-4xl font-bold tracking-tight">Get Involved</h2>
