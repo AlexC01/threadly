@@ -4,18 +4,21 @@ import { Separator } from "@/components/ui/separator";
 
 const ThreadCard = () => {
 	return (
-		<Card className="px-4 flex flex-row gap-4">
-			<div className="hidden md:flex flex-col justify-center items-center gap-5">
-				<button type="button">
+		<Card className="px-4 sm:px-3 md:pl-2 md:pr-4 flex flex-row gap-3 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all cursor-pointer">
+			<div className="hidden md:flex flex-col justify-center items-center gap-3 border-r pr-1">
+				<button
+					type="button"
+					className="transition-all duration-200 cursor-pointer hover:bg-red-300 hover:text-red-600 p-1 rounded-full"
+				>
 					<ArrowBigUp />
 				</button>
 				<span className="block font-bold text-lg text-foreground">44</span>
-				<button type="button">
+				<button
+					type="button"
+					className="transition-all duration-200 cursor-pointer hover:bg-red-300 hover:text-red-600 p-1 rounded-full"
+				>
 					<ArrowBigDown />
 				</button>
-			</div>
-			<div className="hidden md:block">
-				<Separator orientation="vertical" />
 			</div>
 			<div className="flex flex-col flex-1">
 				<p className="text-muted-foreground text-xs mb-3 md:hidden">
@@ -24,7 +27,7 @@ const ThreadCard = () => {
 				<h2 className="font-bold text-xl mb-4">
 					How can this be even possible with torrentio? I dont Understand
 				</h2>
-				<p className="max-w-prose line-clamp-3 text-muted-foreground">
+				<p className="lg:max-w-prose line-clamp-3 text-muted-foreground">
 					Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque
 					faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi
 					pretium tellus pellentesque sem placerat. In id cursus mi pretium
@@ -44,10 +47,10 @@ const ThreadCard = () => {
 							<ArrowBigDown />
 						</button>
 					</div>
-					<div className="flex items-center gap-2">
+					<button type="button" className="flex items-center gap-2">
 						<MessageCircleMore />
 						<span className="inline-block">44</span>
-					</div>
+					</button>
 				</div>
 			</div>
 		</Card>
