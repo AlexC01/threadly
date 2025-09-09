@@ -1,10 +1,9 @@
 import { ArrowBigDown, ArrowBigUp, MessageCircleMore } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 
 const ThreadCard = () => {
 	return (
-		<Card className="px-4 sm:px-3 md:pl-2 md:pr-4 flex flex-row gap-3 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all cursor-pointer">
+		<Card className="px-4 sm:px-3 md:pl-2 md:pr-4 flex flex-row gap-3 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
 			<div className="hidden md:flex flex-col justify-center items-center gap-3 border-r pr-1">
 				<button
 					type="button"
@@ -47,7 +46,10 @@ const ThreadCard = () => {
 							<ArrowBigDown />
 						</button>
 					</div>
-					<button type="button" className="flex items-center gap-2">
+					<button
+						type="button"
+						className="flex items-center gap-1 px-2 py-1 cursor-pointer hover:bg-red-300 hover:text-red-600 rounded-full transition-colors duration-200"
+					>
 						<MessageCircleMore />
 						<span className="inline-block">44</span>
 					</button>
