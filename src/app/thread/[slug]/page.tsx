@@ -1,5 +1,38 @@
-const page = () => {
-	return <div>page</div>;
+import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
+import ThreadDetail from "@/components/Threads/ThreadDetail";
+import routes from "@/lib/routes";
+import { supabase } from "@/lib/supabaseClient";
+
+const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
+	const { slug } = await params;
+
+	const { data: thread, error } = await supabase
+		.rpc("get_thread_details_by_slug", { slug_input: slug })
+		.single();
+
+	if (error || !thread) {
+		return <div>Thread Not Found</div>;
+	}
+
+	return (
+		<main className="min-h-screen">
+			<div className="max-w-7xl mx-auto py-12 md:py-16">
+				<div className="mb-8">
+					<Link
+						href={routes.home}
+						className="flex items-center gap-2 hover:underline cursor-pointer"
+					>
+						<ChevronLeft className="w-4 h-4" />
+						<span className="inline-block text-muted-foreground">
+							Back to all threads
+						</span>
+					</Link>
+				</div>
+				<ThreadDetail thread={thread} />
+			</div>
+		</main>
+	);
 };
 
 export default page;
