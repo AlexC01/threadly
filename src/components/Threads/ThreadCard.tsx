@@ -3,13 +3,14 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import type { ThreadWithStats } from "@/lib/Models/BaseModels";
 import routes from "@/lib/routes";
+import TimeAgo from "../TimeAgo";
 
 interface ThreadCardProps {
 	thread: ThreadWithStats;
 }
 
 const ThreadCard = ({ thread }: ThreadCardProps) => {
-	const { title, slug, content, user_id, vote_count, comment_count } = thread;
+	const { title, slug, content, vote_count, comment_count, username, created_at } = thread;
 
 	return (
 		<Card className="relative group px-4 sm:px-3 md:pl-2 md:pr-4 flex flex-row gap-3 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
@@ -32,7 +33,7 @@ const ThreadCard = ({ thread }: ThreadCardProps) => {
 			</div>
 			<div className="flex flex-col flex-1">
 				<p className="text-muted-foreground text-xs mb-3 md:hidden">
-					{!user_id ? "Anonymous" : user_id}
+					{!username ? "Anonymous" : username}
 				</p>
 				<h2 className="font-bold text-xl mb-4">
 					<Link
@@ -48,7 +49,7 @@ const ThreadCard = ({ thread }: ThreadCardProps) => {
 				</p>
 				<div className="mt-auto pt-4 flex justify-between items-center">
 					<p className="hidden md:block text-muted-foreground text-xs">
-						{!user_id ? "Anonymous" : user_id}
+						{!username ? "Anonymous" : username} - <TimeAgo dateString={created_at}/>
 					</p>
 					<div className="flex md:hidden flex-row gap-2 items-center z-10 relative">
 						<button type="button">
