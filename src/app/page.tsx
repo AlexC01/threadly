@@ -5,8 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/lib/supabaseClient";
 
+const PAGE_SIZE = 2;
+
 export default async function Home() {
-	const { data: threads } = await supabase.rpc("get_threads_with_stats");
+	const { data: threads } = await supabase
+		.rpc("get_threads_with_stats", { sort_by: "new" })
+		.range(0, PAGE_SIZE - 1);
 
 	return (
 		<main className="min-h-screen">

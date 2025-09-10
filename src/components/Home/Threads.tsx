@@ -1,6 +1,8 @@
 "use client";
 
+import { Loader, LoaderCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import type { ThreadInterface } from "@/lib/Models/ThreadModel";
 import { supabase } from "@/lib/supabaseClient";
 import ThreadCard from "../Threads/ThreadCard";
@@ -9,25 +11,60 @@ interface ThreadsProps {
 	initialThreads: ThreadInterface[];
 }
 const sortOptions = ["new", "top", "hot"];
+const PAGE_SIZE = 2;
 
 const Threads = ({ initialThreads }: ThreadsProps) => {
 	const [sort, setSort] = useState("new");
-	const [threads, setThreads] = useState<ThreadInterface[]>(initialThreads);
+	const [threads, setThreads] = useState<ThreadInterface[]>(
+		initialThreads || [],
+	);
 	const [loading, setLoading] = useState(false);
+	const [page, setPage] = useState(1);
+	const [hasMore, setHasMore] = useState(initialThreads.length === PAGE_SIZE);
+	const [loadingMore, setLoadingMore] = useState(false);
+
+	const loadMoreThreads = async () => {
+		setLoadingMore(true);
+		const from = page * PAGE_SIZE;
+		const to = from + PAGE_SIZE - 1;
+
+		try {
+			const { data, error } = await supabase
+				.rpc("get_threads_with_stats", {
+					sort_by: sort,
+				})
+				.range(from, to);
+
+			if (error) console.error("Error fetching more threads", error);
+			else {
+				setThreads((prev) => [...prev, ...data]);
+				setPage((prevPage) => prevPage + 1);
+				if (data.length < PAGE_SIZE) setHasMore(false);
+			}
+		} catch (err) {
+			console.error("Error fetching more threads", err);
+		} finally {
+			setLoadingMore(false);
+		}
+	};
 
 	useEffect(() => {
 		const fetchThreads = async () => {
 			setLoading(true);
 
 			try {
-				const { data, error } = await supabase.rpc("get_threads_with_stats", {
-					sort_by: sort,
-				});
+				const { data, error } = await supabase
+					.rpc("get_threads_with_stats", {
+						sort_by: sort,
+					})
+					.range(0, PAGE_SIZE - 1);
 
 				if (error) {
 					console.error("Error fetching threeds", error);
 				} else {
 					setThreads(data || []);
+					setPage(1);
+					setHasMore(true);
 				}
 			} catch (err) {
 				console.error("Error fetching threeds", err);
@@ -37,7 +74,11 @@ const Threads = ({ initialThreads }: ThreadsProps) => {
 			}
 		};
 		if (sort !== "new") fetchThreads();
-		else setThreads(initialThreads);
+		else {
+			setThreads(initialThreads);
+			setPage(1);
+			setHasMore(true);
+		}
 	}, [sort, initialThreads]);
 
 	return (
@@ -62,6 +103,18 @@ const Threads = ({ initialThreads }: ThreadsProps) => {
 					<ThreadCard key={thread.id} thread={thread} />
 				))}
 			</section>
+			{hasMore && (
+				<div className="flex justify-center mt-10">
+					<Button
+						onClick={loadMoreThreads}
+						disabled={loadingMore}
+						className="flex items-center"
+					>
+						{loadingMore ? "Loading..." : "Load More"}
+						{loadingMore && <Loader className="animate-spin" />}
+					</Button>
+				</div>
+			)}
 		</>
 	);
 };
