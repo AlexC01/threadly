@@ -1,21 +1,21 @@
 "use client";
 
-import { Loader, LoaderCircle } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import type { ThreadInterface } from "@/lib/Models/ThreadModel";
+import type { ThreadWithStats } from "@/lib/Models/BaseModels";
 import { supabase } from "@/lib/supabaseClient";
 import ThreadCard from "../Threads/ThreadCard";
 
 interface ThreadsProps {
-	initialThreads: ThreadInterface[];
+	initialThreads: ThreadWithStats[];
 }
 const sortOptions = ["new", "top", "hot"];
 const PAGE_SIZE = 2;
 
 const Threads = ({ initialThreads }: ThreadsProps) => {
 	const [sort, setSort] = useState("new");
-	const [threads, setThreads] = useState<ThreadInterface[]>(
+	const [threads, setThreads] = useState<ThreadWithStats[]>(
 		initialThreads || [],
 	);
 	const [loading, setLoading] = useState(false);

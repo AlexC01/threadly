@@ -29,7 +29,7 @@ export default async function Home() {
 					</Button>
 				</div>
 				<div className="mt-10 px-4 md:px-8">
-					<Threads initialThreads={threads} />
+					<Threads initialThreads={threads ?? []} />
 				</div>
 				<div className="mt-16 text-center">
 					<h2 className="text-4xl font-bold tracking-tight">Get Involved</h2>

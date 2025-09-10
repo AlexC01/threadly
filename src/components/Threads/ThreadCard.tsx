@@ -1,11 +1,11 @@
 import { ArrowBigDown, ArrowBigUp, MessageCircleMore } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import type { ThreadInterface } from "@/lib/Models/ThreadModel";
+import type { ThreadWithStats } from "@/lib/Models/BaseModels";
 import routes from "@/lib/routes";
 
 interface ThreadCardProps {
-	thread: ThreadInterface;
+	thread: ThreadWithStats;
 }
 
 const ThreadCard = ({ thread }: ThreadCardProps) => {
