@@ -58,8 +58,7 @@ const Navbar = () => {
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu> */}
-					<Button variant="outline">Sign Up</Button>
-					<Button variant="destructive">Log In</Button>
+					<Button variant="outline">Sign Up / Log In</Button>
 					<ThemeToggle />
 				</div>
 
@@ -80,8 +79,7 @@ const Navbar = () => {
 									<Input placeholder="Search threads..." className="pl-10" />
 									<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
 								</div>
-								<Button variant="default">Sign Up</Button>
-								<Button variant="outline">Log In</Button>
+								<Button variant="default">Sign Up / Log In</Button>
 								<ThemeToggle />
 							</div>
 						</SheetContent>

@@ -98,10 +98,17 @@ const Threads = ({ initialThreads }: ThreadsProps) => {
 					</button>
 				))}
 			</div>
-			<section className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
-				{threads.map((thread) => (
-					<ThreadCard key={thread.id} thread={thread} />
-				))}
+			<section className="mt-10 relative">
+				{loading && (
+					<div className="absolute inset-0 bg-background/50 backdrop-blur-xs flex items-center justify-center z-10">
+						<Loader className="animate-spin w-12 h-12" />
+					</div>
+				)}
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+					{threads.map((thread) => (
+						<ThreadCard key={thread.id} thread={thread} />
+					))}
+				</div>
 			</section>
 			{hasMore && (
 				<div className="flex justify-center mt-10">
