@@ -232,27 +232,27 @@ export type Database = {
       }
       threads: {
         Row: {
-          content: string | null
+          content: string
           created_at: string
           id: number
           slug: string
-          title: string | null
+          title: string
           user_id: string | null
         }
         Insert: {
-          content?: string | null
+          content: string
           created_at?: string
           id?: number
           slug: string
-          title?: string | null
+          title: string
           user_id?: string | null
         }
         Update: {
-          content?: string | null
+          content?: string
           created_at?: string
           id?: number
           slug?: string
-          title?: string | null
+          title?: string
           user_id?: string | null
         }
         Relationships: [
@@ -270,6 +270,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_thread_details_by_slug: {
+        Args: { slug_input: string }
+        Returns: {
+          comment_count: number
+          content: string
+          created_at: string
+          id: number
+          slug: string
+          title: string
+          user_id: string
+          username: string
+          vote_count: number
+        }[]
+      }
       get_threads_with_stats: {
         Args: { sort_by: string }
         Returns: {
