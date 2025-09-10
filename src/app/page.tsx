@@ -46,7 +46,7 @@ export default async function Home() {
 							<li>Get a persistent anonymous ID</li>
 						</ul>
 						<Button className="mt-2" variant="outline">
-							Log In / Sign Up
+							Sign Up / Log In
 						</Button>
 					</Card>
 					<Card className="flex flex-col items-center text-center">

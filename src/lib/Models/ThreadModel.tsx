@@ -6,4 +6,5 @@ export interface ThreadInterface {
 	user_id: number | null;
 	comment_count: number;
 	vote_count: number;
+	slug: string;
 }
