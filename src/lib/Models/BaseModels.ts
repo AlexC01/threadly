@@ -5,3 +5,6 @@ export type ThreadWithStats =
 
 export type ThreadSingle =
 	Database["public"]["Functions"]["get_thread_details_by_slug"]["Returns"][number];
+
+export type ThreadCommentsType =
+	Database["public"]["Functions"]["get_posts_for_thread"]["Returns"][number];

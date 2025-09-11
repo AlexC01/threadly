@@ -137,6 +137,45 @@ export type Database = {
           },
         ]
       }
+      post_votes: {
+        Row: {
+          created_at: string
+          id: number
+          post_id: number
+          user_id: string
+          vote_type: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          post_id: number
+          user_id: string
+          vote_type: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          post_id?: number
+          user_id?: string
+          vote_type?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_votes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_votes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
           content: string
@@ -270,6 +309,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_posts_for_thread: {
+        Args: { thread_id_input: number }
+        Returns: {
+          content: string
+          created_at: string
+          id: number
+          user_id: string
+          username: string
+          vote_count: number
+        }[]
+      }
       get_thread_details_by_slug: {
         Args: { slug_input: string }
         Returns: {
