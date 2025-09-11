@@ -15,6 +15,7 @@ import {
 	Strikethrough,
 	TextQuote,
 } from "lucide-react";
+import { useEffect } from "react";
 import { Toggle } from "@/components/ui/toggle";
 
 interface ToolbarProps {
@@ -27,7 +28,7 @@ const Toolbar = ({ editor }: ToolbarProps) => {
 		return null;
 	}
 	return (
-		<div className="border border-input bg-transparent rounded-md p-1 flex gap-1">
+		<div className="border border-input bg-transparent rounded-md p-1 flex flex-wrap gap-1">
 			<Toggle
 				size="sm"
 				className="cursor-pointer"
@@ -161,6 +162,11 @@ export const TiptapEditor = ({
 		},
 		content: content,
 	});
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (content !== editor?.getHTML()) editor?.commands.setContent(content);
+	}, [content]);
 
 	return (
 		<div className="flex flex-col gap-2">

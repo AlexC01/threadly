@@ -15,12 +15,12 @@ interface ThreadDetailProps {
 const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
 	const {
 		title,
-		slug,
 		content,
 		vote_count,
 		comment_count,
 		created_at,
 		username,
+		id,
 	} = thread;
 
 	return (
@@ -60,7 +60,11 @@ const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
 					</Button>
 				</div>
 			</Card>
-			<ThreadComments comment_count={comment_count} comments={comments} />
+			<ThreadComments
+				initialComments={comments}
+				thread_id={id}
+				comment_count={comment_count}
+			/>
 		</>
 	);
 };

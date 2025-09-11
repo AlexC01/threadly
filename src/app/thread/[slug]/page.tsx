@@ -15,9 +15,11 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 		return <div>Thread Not Found</div>;
 	}
 
-	const { data: posts } = await supabase.rpc("get_posts_for_thread", {
-		thread_id_input: thread.id,
-	});
+	const { data: posts } = await supabase
+		.rpc("get_posts_for_thread", {
+			thread_id_input: thread.id,
+		})
+		.range(0, 4);
 
 	return (
 		<main className="min-h-screen">

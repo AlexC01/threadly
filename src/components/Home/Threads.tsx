@@ -20,7 +20,7 @@ const Threads = ({ initialThreads }: ThreadsProps) => {
 	);
 	const [loading, setLoading] = useState(false);
 	const [page, setPage] = useState(1);
-	const [hasMore, setHasMore] = useState(initialThreads.length === PAGE_SIZE);
+	const [hasMore, setHasMore] = useState(threads.length === PAGE_SIZE);
 	const [loadingMore, setLoadingMore] = useState(false);
 
 	const loadMoreThreads = async () => {
