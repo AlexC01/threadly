@@ -14,7 +14,6 @@ import {
 	SquareTerminal,
 	Strikethrough,
 	TextQuote,
-	Undo,
 } from "lucide-react";
 import { Toggle } from "@/components/ui/toggle";
 
