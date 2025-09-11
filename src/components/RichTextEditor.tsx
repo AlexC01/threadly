@@ -4,6 +4,7 @@
 
 import { type Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import CharacterCount from '@tiptap/extension-character-count';
 import { Bold, Italic, Strikethrough } from "lucide-react";
 import { Toggle } from "@/components/ui/toggle";
 
@@ -49,12 +50,13 @@ const Toolbar = ({ editor }: ToolbarProps) => {
 interface TipTapEditorProps {
 	onChange: (richText: string) => void;
 	content: string;
+	limit: number;
 }
 
-export const TiptapEditor = ({ onChange, content }: TipTapEditorProps) => {
+export const TiptapEditor = ({ onChange, content, limit }: TipTapEditorProps) => {
 	// The "Brain"
 	const editor = useEditor({
-		extensions: [StarterKit.configure()],
+		extensions: [StarterKit.configure(), CharacterCount.configure({limit})],
 		immediatelyRender: false,
 		editorProps: {
 			attributes: {

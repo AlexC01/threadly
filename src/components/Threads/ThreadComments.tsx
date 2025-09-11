@@ -18,6 +18,7 @@ const ThreadComments = ({ comments, comment_count }: ThreadCommentsProps) => {
 			<div className="flex flex-col gap-4">
 				<TiptapEditor
 					content={content}
+					limit={3000}
 					onChange={(newContent: string) => setContent(newContent)}
 				/>
 				<Button onClick={() => {}} className="self-end">
