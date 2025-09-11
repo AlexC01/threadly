@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const loading = () => {
 	return (
 		<main className="min-h-screen">
-			<div className="max-w-7xl mx-auto py-12 md:py-16">
+			<div className="max-w-7xl mx-auto py-12 md:py-16 px-4 md:px-8 xl:px-4">
 				<div className="mb-8">
 					<Skeleton className="h-4 w-[250px] bg-gray-400 rounded-lg" />
 				</div>
@@ -31,7 +31,6 @@ const loading = () => {
 				</Card>
 
 				<Separator className="my-10" />
-
 				{/* Skeletons for the comments section */}
 				<div className="space-y-6">
 					<Skeleton className="h-24 w-full bg-gray-400 rounded-lg" />

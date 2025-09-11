@@ -21,7 +21,7 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 
 	return (
 		<main className="min-h-screen">
-			<div className="max-w-7xl mx-auto py-12 md:py-16">
+			<div className="max-w-7xl mx-auto py-12 md:py-16 px-4 md:px-8 xl:px-4">
 				<div className="mb-8">
 					<Link
 						href={routes.home}
