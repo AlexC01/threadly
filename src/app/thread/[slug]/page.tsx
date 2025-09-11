@@ -15,6 +15,10 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 		return <div>Thread Not Found</div>;
 	}
 
+	const { data: posts } = await supabase.rpc("get_posts_for_thread", {
+		thread_id_input: thread.id,
+	});
+
 	return (
 		<main className="min-h-screen">
 			<div className="max-w-7xl mx-auto py-12 md:py-16">
@@ -29,7 +33,7 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 						</span>
 					</Link>
 				</div>
-				<ThreadDetail thread={thread} />
+				<ThreadDetail thread={thread} comments={posts || []} />
 			</div>
 		</main>
 	);
