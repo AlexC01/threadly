@@ -181,21 +181,21 @@ export type Database = {
           content: string
           created_at: string
           id: number
-          thread_id: number | null
+          thread_id: number
           user_id: string | null
         }
         Insert: {
           content: string
           created_at?: string
           id?: number
-          thread_id?: number | null
+          thread_id: number
           user_id?: string | null
         }
         Update: {
           content?: string
           created_at?: string
           id?: number
-          thread_id?: number | null
+          thread_id?: number
           user_id?: string | null
         }
         Relationships: [
