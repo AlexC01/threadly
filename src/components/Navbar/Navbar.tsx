@@ -18,6 +18,7 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sheet";
+import routes from "@/lib/routes";
 
 const Navbar = () => {
 	return (
@@ -58,7 +59,11 @@ const Navbar = () => {
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu> */}
-					<Button variant="outline">Sign Up / Log In</Button>
+					<Button asChild variant="outline">
+						<Link href={routes.account} prefetch={false}>
+							Sign Up / Log In
+						</Link>
+					</Button>
 					<ThemeToggle />
 				</div>
 

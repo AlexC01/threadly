@@ -10,7 +10,15 @@ interface ThreadCardProps {
 }
 
 const ThreadCard = ({ thread }: ThreadCardProps) => {
-	const { title, slug, content, vote_count, comment_count, username, created_at } = thread;
+	const {
+		title,
+		slug,
+		content,
+		vote_count,
+		comment_count,
+		username,
+		created_at,
+	} = thread;
 
 	return (
 		<Card className="relative group px-4 sm:px-3 md:pl-2 md:pr-4 flex flex-row gap-3 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
@@ -49,7 +57,8 @@ const ThreadCard = ({ thread }: ThreadCardProps) => {
 				</p>
 				<div className="mt-auto pt-4 flex justify-between items-center">
 					<p className="hidden md:block text-muted-foreground text-xs">
-						{!username ? "Anonymous" : username} - <TimeAgo dateString={created_at}/>
+						{!username ? "Anonymous" : username} -{" "}
+						<TimeAgo dateString={created_at} />
 					</p>
 					<div className="flex md:hidden flex-row gap-2 items-center z-10 relative">
 						<button type="button">
@@ -62,13 +71,10 @@ const ThreadCard = ({ thread }: ThreadCardProps) => {
 							<ArrowBigDown />
 						</button>
 					</div>
-					<button
-						type="button"
-						className="flex items-center gap-1 px-2 py-1 cursor-pointer hover:bg-red-300 hover:text-red-600 rounded-full transition-colors duration-200 z-10 relative"
-					>
+					<div className="flex items-center gap-1 px-2 py-1 ">
 						<MessageCircleMore />
 						<span className="inline-block">{comment_count}</span>
-					</button>
+					</div>
 				</div>
 			</div>
 		</Card>
