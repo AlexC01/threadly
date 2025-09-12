@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/security/noDangerouslySetInnerHtml: <explanation> */
+/** biome-ignore-all lint/security/noDangerouslySetInnerHtml: <The content of the comments contains HTML, and we are sanitizing it before displaying it> */
 "use client";
 import DOMPurify from "dompurify";
 import {
