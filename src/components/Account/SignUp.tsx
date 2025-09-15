@@ -1,9 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleX } from "lucide-react";
-import { useId } from "react";
+import { CircleX, LoaderCircle } from "lucide-react";
+import { useId, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardDescription,
@@ -14,8 +16,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { type SignUpFormData, signUpSchema } from "@/lib/schemas/userSchema";
+import { supabase } from "@/lib/supabaseClient";
 
 const SignUp = () => {
+	const [loading, setLoading] = useState(false);
 	const {
 		register,
 		handleSubmit,
@@ -28,13 +32,36 @@ const SignUp = () => {
 	const emailError = useId();
 	const passwordError = useId();
 
-	const onSubmit: SubmitHandler<SignUpFormData> = (data) => {
-		console.log("entro");
-		console.log(data);
+	const onSubmit: SubmitHandler<SignUpFormData> = async (values) => {
+		if (loading) return;
+		setLoading(true);
+		try {
+			const { data, error } = await supabase.auth.signUp({
+				email: values.email,
+				password: values.password,
+				options: {
+					data: {
+						username: values.username,
+					},
+				},
+			});
+			if (error) {
+				console.error(error);
+				toast.error(error.message ?? "Error while signing up");
+			} else {
+				console.log(data);
+				toast.success("Signed Up Successfully");
+			}
+		} catch (error) {
+			console.error(error);
+			toast.error("Error while signing up");
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
-		<Card className="min-w-lg mt-2 px-8">
+		<Card className="mt-2 px-2 xs:min-w-sm sm:px-8 sm:min-w-lg">
 			<CardHeader className="text-center">
 				<CardTitle className="text-3xl">Create Account</CardTitle>
 				<CardDescription className="text-muted-foreground mt-1">
@@ -115,11 +142,14 @@ const SignUp = () => {
 						)}
 					</p>
 				</div>
-				<Input
+				<Button
 					type="submit"
 					value="Submit"
-					className="cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
-				/>
+					className="cursor-pointer w-full flex items-center gap-1 uppercase font-bold"
+				>
+					Submit
+					{loading && <LoaderCircle className="animate-spin" />}
+				</Button>
 			</form>
 		</Card>
 	);
