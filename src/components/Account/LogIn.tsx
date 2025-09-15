@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleX } from "lucide-react";
+import { CircleX, LoaderCircle } from "lucide-react";
 import { useId, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -31,6 +31,7 @@ const LogIn = () => {
 	const passwordError = useId();
 
 	const onSubmit: SubmitHandler<LogInFormData> = async (values) => {
+		if (loading) return;
 		setLoading(true);
 		try {
 			const { data, error } = await supabase.auth.signInWithPassword({
@@ -52,7 +53,7 @@ const LogIn = () => {
 	};
 
 	return (
-		<Card className="min-w-lg mt-2 px-8">
+		<Card className="mt-2 px-2 xs:min-w-sm sm:px-8 sm:min-w-lg">
 			<CardHeader className="text-center">
 				<CardTitle className="text-3xl">Welcome Back</CardTitle>
 				<CardDescription className="text-muted-foreground mt-1">
@@ -118,9 +119,11 @@ const LogIn = () => {
 				<Button
 					type="submit"
 					value="Submit"
-					className="cursor-pointer w-full active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
+					disabled={loading}
+					className="cursor-pointer w-full flex items-center gap-1 uppercase font-bold"
 				>
 					Submit
+					{loading && <LoaderCircle className="animate-spin" />}
 				</Button>
 			</form>
 		</Card>

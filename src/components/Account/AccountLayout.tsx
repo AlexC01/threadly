@@ -8,7 +8,7 @@ import SignUp from "./SignUp";
 const AccountLayout = () => {
 	const [tabValue, setTabValue] = useState("login");
 	return (
-		<div className="flex items-center justify-center h-screen">
+		<div className="flex items-center justify-center h-full">
 			<Tabs value={tabValue} onValueChange={(value) => setTabValue(value)}>
 				<TabsList className="px-4 py-8 space-x-2">
 					<TabsTrigger
