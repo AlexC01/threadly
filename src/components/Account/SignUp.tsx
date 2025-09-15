@@ -50,7 +50,9 @@ const SignUp = () => {
 				toast.error(error.message ?? "Error while signing up");
 			} else {
 				console.log(data);
-				toast.success("Signed Up Successfully");
+				toast.success(
+					"Success! Please check your email to confirm your account.",
+				);
 			}
 		} catch (error) {
 			console.error(error);
