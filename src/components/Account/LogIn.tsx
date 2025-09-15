@@ -1,60 +1,105 @@
 "use client";
 
-import { Form, SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CircleX } from "lucide-react";
+import { useId } from "react";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import {
 	Card,
-	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { AuthFormData, authSchema } from "@/lib/schemas/userSchema";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {zodResolver} from '@hookform/resolvers/zod';
+import { Separator } from "@/components/ui/separator";
+import { type LogInFormData, logInSchema } from "@/lib/schemas/userSchema";
+import { Label } from "../ui/label";
 
 const LogIn = () => {
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<AuthFormData>({resolver: zodResolver(authSchema)});
+	} = useForm<LogInFormData>({ resolver: zodResolver(logInSchema) });
+	const passwordInput = useId();
+	const emailInput = useId();
+	const emailError = useId();
+	const passwordError = useId();
 
-	const onSubmit: SubmitHandler<AuthFormData> = (data) => console.log(data);
+	const onSubmit: SubmitHandler<LogInFormData> = (data) => {
+		console.log("entro");
+		console.log(data);
+	};
 
 	return (
-		<Card className="min-w-xl mt-2 px-8">
+		<Card className="min-w-lg mt-2 px-8">
 			<CardHeader className="text-center">
 				<CardTitle className="text-3xl">Welcome Back</CardTitle>
 				<CardDescription className="text-muted-foreground mt-1">
 					Enter your email below to login to your account
 				</CardDescription>
 			</CardHeader>
+
 			<div className="px-12">
 				<Separator />
 			</div>
-			<form onSubmit={handleSubmit(onSubmit)}>
-				<Input
-					{...register("email")}
-					className="mb-4"
-				/>
-				{errors.email && (
-					<p className="text-xs text-red-400" role="alert">
-						{errors.email.message}
+			<form onSubmit={handleSubmit(onSubmit)} className="px-6 mb-4">
+				<div className="mb-3">
+					<Label htmlFor={emailInput}>Email</Label>
+					<Input
+						placeholder="loremipsum@example.com"
+						type="email"
+						id={emailInput}
+						className="mb-3 mt-2 placeholder:text-gray-400"
+						{...register("email")}
+						aria-describedby={emailError}
+					/>
+					<p
+						className="text-xs text-red-400 h-3 flex gap-1 font-bold"
+						role="alert"
+						id={emailError}
+					>
+						{errors.email && (
+							<>
+								<CircleX size={15} />
+								{errors.email.message}
+							</>
+						)}
 					</p>
-				)}
-				<Input
-					{...register("email")}
-					className="mb-4"
-				/>
-				{errors.email && (
-					<p className="text-xs text-red-400" role="alert">
-						{errors.email.message}
+				</div>
+				<div className="mb-3">
+					<div className="flex items-center justify-between">
+						<Label htmlFor={passwordInput}>Password</Label>
+						<a href="/" className="text-xs hover:underline">
+							Forgot your password?
+						</a>
+					</div>
+					<Input
+						type="password"
+						placeholder="test123"
+						id={passwordInput}
+						className="mb-3 mt-2 placeholder:text-gray-400"
+						{...register("password")}
+						aria-describedby={passwordError}
+					/>
+					<p
+						className="text-xs text-red-400 h-3 flex gap-1 font-bold"
+						role="alert"
+						id={passwordError}
+					>
+						{errors.password && (
+							<>
+								<CircleX size={15} />
+								{errors.password.message}
+							</>
+						)}
 					</p>
-				)}
-				<Input type="submit" value="Submit" />
+				</div>
+				<Input
+					type="submit"
+					value="Submit"
+					className="cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
+				/>
 			</form>
 		</Card>
 	);
