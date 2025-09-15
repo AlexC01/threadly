@@ -2,8 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleX } from "lucide-react";
-import { useId } from "react";
+import { useId, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import {
 	Card,
 	CardDescription,
@@ -13,9 +14,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { type LogInFormData, logInSchema } from "@/lib/schemas/userSchema";
+import { supabase } from "@/lib/supabaseClient";
+import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 
 const LogIn = () => {
+	const [loading, setLoading] = useState(false);
 	const {
 		register,
 		handleSubmit,
@@ -26,9 +30,25 @@ const LogIn = () => {
 	const emailError = useId();
 	const passwordError = useId();
 
-	const onSubmit: SubmitHandler<LogInFormData> = (data) => {
-		console.log("entro");
-		console.log(data);
+	const onSubmit: SubmitHandler<LogInFormData> = async (values) => {
+		setLoading(true);
+		try {
+			const { data, error } = await supabase.auth.signInWithPassword({
+				email: values.email,
+				password: values.password,
+			});
+			if (error) {
+				console.error(error);
+				toast.error(error.message ?? "Error while logging in");
+			} else {
+				toast.success("Logged In Successfully");
+			}
+		} catch (error) {
+			console.error(error);
+			toast.error("Error while logging in");
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -95,11 +115,13 @@ const LogIn = () => {
 						)}
 					</p>
 				</div>
-				<Input
+				<Button
 					type="submit"
 					value="Submit"
-					className="cursor-pointer active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
-				/>
+					className="cursor-pointer w-full active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
+				>
+					Submit
+				</Button>
 			</form>
 		</Card>
 	);
