@@ -3,11 +3,13 @@ import Link from "next/link";
 import Threads from "@/components/Home/Threads";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabase/server";
 
 const PAGE_SIZE = 2;
 
 export default async function Home() {
+	const supabase = await createClient();
+
 	const { data: threads } = await supabase
 		.rpc("get_threads_with_stats", { sort_by: "new" })
 		.range(0, PAGE_SIZE - 1);

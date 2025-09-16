@@ -4,7 +4,7 @@ import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { ThreadWithStats } from "@/lib/Models/BaseModels";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/supabase/client";
 import ThreadCard from "../Threads/ThreadCard";
 
 interface ThreadsProps {

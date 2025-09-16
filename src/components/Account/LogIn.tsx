@@ -5,6 +5,7 @@ import { CircleX, LoaderCircle } from "lucide-react";
 import { useId, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardDescription,
@@ -12,11 +13,10 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { type LogInFormData, logInSchema } from "@/lib/schemas/userSchema";
-import { supabase } from "@/lib/supabaseClient";
-import { Button } from "../ui/button";
-import { Label } from "../ui/label";
+import { supabase } from "@/lib/supabase/client";
 
 const LogIn = () => {
 	const [loading, setLoading] = useState(false);
@@ -34,7 +34,7 @@ const LogIn = () => {
 		if (loading) return;
 		setLoading(true);
 		try {
-			const { data, error } = await supabase.auth.signInWithPassword({
+			const { error } = await supabase.auth.signInWithPassword({
 				email: values.email,
 				password: values.password,
 			});

@@ -2,9 +2,10 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import ThreadDetail from "@/components/Threads/ThreadDetail";
 import routes from "@/lib/routes";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabase/server";
 
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
+	const supabase = await createClient();
 	const { slug } = await params;
 
 	const { data: thread, error } = await supabase

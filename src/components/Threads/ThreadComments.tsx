@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { ThreadCommentsType } from "@/lib/Models/BaseModels";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/supabase/client";
 import { TiptapEditor } from "../RichTextEditor";
 import TimeAgo from "../TimeAgo";
 

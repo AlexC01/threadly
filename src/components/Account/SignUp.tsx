@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { type SignUpFormData, signUpSchema } from "@/lib/schemas/userSchema";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/supabase/client";
 
 const SignUp = () => {
 	const [loading, setLoading] = useState(false);
