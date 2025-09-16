@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer/Footer";
 import Navbar from "@/components/Navbar/Navbar";
+import SessionManager from "@/components/SessionManager";
 import { ThemeProvider } from "@/components/Theme/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { createClient } from "@/lib/supabase/server";
@@ -41,6 +42,7 @@ export default async function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
+					<SessionManager />
 					<Toaster />
 					<Navbar user={data.user} />
 					{children}
