@@ -310,12 +310,13 @@ export type Database = {
     }
     Functions: {
       get_posts_for_thread: {
-        Args: { thread_id_input: number }
+        Args: { current_user_id?: string; thread_id_input: number }
         Returns: {
           content: string
           created_at: string
           id: number
           user_id: string
+          user_vote: number
           username: string
           vote_count: number
         }[]

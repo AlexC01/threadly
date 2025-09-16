@@ -8,3 +8,7 @@ export type ThreadSingle =
 
 export type ThreadCommentsType =
 	Database["public"]["Functions"]["get_posts_for_thread"]["Returns"][number];
+
+export type CorrectedCommentType = Omit<ThreadCommentsType, "user_vote"> & {
+	user_vote: number | null;
+};
