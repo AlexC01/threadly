@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleX, LoaderCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useId, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ import { type LogInFormData, logInSchema } from "@/lib/schemas/userSchema";
 import { supabase } from "@/lib/supabase/client";
 
 const LogIn = () => {
+	const router = useRouter();
 	const [loading, setLoading] = useState(false);
 	const {
 		register,
@@ -43,6 +45,8 @@ const LogIn = () => {
 				toast.error(error.message ?? "Error while logging in");
 			} else {
 				toast.success("Logged In Successfully");
+				router.push("/");
+				router.refresh();
 			}
 		} catch (error) {
 			console.error(error);
