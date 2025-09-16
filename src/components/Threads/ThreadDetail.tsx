@@ -3,13 +3,16 @@
 import { ArrowBigDown, ArrowBigUp, Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import type { ThreadCommentsType, ThreadSingle } from "@/lib/Models/BaseModels";
+import type {
+	CorrectedCommentType,
+	ThreadSingle,
+} from "@/lib/Models/BaseModels";
 import TimeAgo from "../TimeAgo";
 import ThreadComments from "./ThreadComments";
 
 interface ThreadDetailProps {
 	thread: ThreadSingle;
-	comments: ThreadCommentsType[];
+	comments: CorrectedCommentType[];
 }
 
 const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {

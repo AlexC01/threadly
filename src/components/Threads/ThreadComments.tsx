@@ -1,4 +1,5 @@
 /** biome-ignore-all lint/security/noDangerouslySetInnerHtml: <The content of the comments contains HTML, and we are sanitizing it before displaying it> */
+/** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
 "use client";
 import DOMPurify from "dompurify";
 import {
@@ -13,14 +14,14 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import type { ThreadCommentsType } from "@/lib/Models/BaseModels";
+import type { CorrectedCommentType } from "@/lib/Models/BaseModels";
 import useAuth from "@/lib/stores/useAuth";
 import { supabase } from "@/lib/supabase/client";
 import { TiptapEditor } from "../RichTextEditor";
 import TimeAgo from "../TimeAgo";
 
 interface ThreadCommentsProps {
-	initialComments: ThreadCommentsType[];
+	initialComments: CorrectedCommentType[];
 	thread_id: number;
 	comment_count: number;
 }
@@ -36,7 +37,7 @@ const ThreadComments = ({
 	const [loading, setLoading] = useState(false);
 	const [loadingComments, setLoadingComments] = useState(false);
 	const [content, setContent] = useState("");
-	const [comments, setComments] = useState<ThreadCommentsType[]>([]);
+	const [comments, setComments] = useState<CorrectedCommentType[]>([]);
 
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(
@@ -51,6 +52,7 @@ const ThreadComments = ({
 			const { data, error } = await supabase
 				.rpc("get_posts_for_thread", {
 					thread_id_input: thread_id,
+					current_user_id: user ? user.id : undefined,
 				})
 				.range(from, to);
 
@@ -96,6 +98,60 @@ const ThreadComments = ({
 			toast.error("Error while submiting reply");
 		} finally {
 			setLoading(false);
+		}
+	};
+
+	const handleCommentLikes = async (
+		commentId: number,
+		voteType: number | null,
+	) => {
+		if (!user) {
+			toast.error("In order to vote please log in or create an account");
+			return;
+		}
+
+		const currentComment = comments.find((c) => c.id === commentId);
+		if (!currentComment) return;
+
+		const currentVote = currentComment.user_vote;
+		let scoreChange = 0;
+
+		if (currentVote === null) scoreChange = voteType!;
+		else if (voteType === null) scoreChange = -currentVote;
+		else scoreChange = voteType - currentVote;
+
+		setComments((prevComments) =>
+			prevComments.map((c) =>
+				c.id === commentId
+					? {
+							...c,
+							vote_count: c.vote_count + scoreChange,
+							user_vote: voteType,
+						}
+					: c,
+			),
+		);
+
+		try {
+			if (voteType === null) {
+				const { error } = await supabase
+					.from("post_votes")
+					.delete()
+					.match({ user_id: user.id, post_id: commentId });
+
+				if (error) toast.error("Failed to remove vote.");
+			} else {
+				const { error } = await supabase
+					.from("post_votes")
+					.upsert(
+						{ post_id: commentId, vote_type: voteType, user_id: user.id },
+						{ onConflict: "post_id, user_id" },
+					);
+
+				if (error) toast.error("Failed to cast vote.");
+			}
+		} catch (err) {
+			toast.error("Error while voting");
 		}
 	};
 
@@ -155,7 +211,7 @@ const ThreadComments = ({
 			)}
 			<div className="mt-5 relative">
 				{comments.length > 0 &&
-					comments.map((comment, index) => {
+					comments.map((comment) => {
 						return (
 							<Card key={comment.id} className="p-4 flex flex-col mb-7 gap-5">
 								<p className="text-muted-foreground text-sm">
@@ -170,7 +226,13 @@ const ThreadComments = ({
 									<button
 										type="button"
 										aria-label="Upvote Comment"
-										className="transition-all duration-200 cursor-pointer hover:bg-red-300 hover:text-red-600 p-1 rounded-full"
+										onClick={() =>
+											handleCommentLikes(
+												comment.id,
+												comment.user_vote === 1 ? null : 1,
+											)
+										}
+										className={`transition-all duration-200 cursor-pointer hover:bg-red-300 hover:text-red-600 p-1 rounded-full ${comment.user_vote === 1 ? "bg-red-300 text-red-600" : ""}`}
 									>
 										<ArrowBigUp />
 									</button>
@@ -179,8 +241,14 @@ const ThreadComments = ({
 									</span>
 									<button
 										type="button"
+										onClick={() =>
+											handleCommentLikes(
+												comment.id,
+												comment.user_vote === -1 ? null : -1,
+											)
+										}
 										aria-label="Downvote Comment"
-										className="transition-all duration-200 cursor-pointer hover:bg-red-300 hover:text-red-600 p-1 rounded-full"
+										className={`transition-all duration-200 cursor-pointer hover:bg-red-300 hover:text-red-600 p-1 rounded-full ${comment.user_vote === -1 ? "bg-red-300 text-red-600" : ""}`}
 									>
 										<ArrowBigDown />
 									</button>
