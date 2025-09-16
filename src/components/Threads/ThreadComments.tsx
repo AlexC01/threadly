@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { ThreadCommentsType } from "@/lib/Models/BaseModels";
+import useAuth from "@/lib/stores/useAuth";
 import { supabase } from "@/lib/supabase/client";
 import { TiptapEditor } from "../RichTextEditor";
 import TimeAgo from "../TimeAgo";
@@ -31,6 +32,7 @@ const ThreadComments = ({
 	thread_id,
 	comment_count,
 }: ThreadCommentsProps) => {
+	const { user } = useAuth();
 	const [loading, setLoading] = useState(false);
 	const [loadingComments, setLoadingComments] = useState(false);
 	const [content, setContent] = useState("");
@@ -75,7 +77,7 @@ const ThreadComments = ({
 		try {
 			const { error } = await supabase
 				.from("posts")
-				.insert({ thread_id, content });
+				.insert({ thread_id, content, user_id: user ? user.id : undefined });
 
 			if (error) throw new Error();
 			else {
