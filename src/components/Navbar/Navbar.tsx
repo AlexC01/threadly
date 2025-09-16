@@ -1,6 +1,12 @@
 "use client";
 import type { User } from "@supabase/supabase-js";
-import { LoaderCircle, Menu, MessageSquareIcon, Search } from "lucide-react";
+import {
+	LoaderCircle,
+	Menu,
+	MessageSquareIcon,
+	Search,
+	User as UserIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -53,6 +59,18 @@ const Navbar = ({ user }: NavbarProps) => {
 		}
 	};
 
+	const getInitials = () => {
+		if (!user) return null;
+		const firstName = user.user_metadata?.first_name?.[0];
+		const lastName = user.user_metadata?.last_name?.[0];
+
+		if (firstName && lastName) return `${firstName}${lastName}`;
+
+		return null;
+	};
+
+	const userInitials = getInitials();
+
 	return (
 		<header className="sticky top-0 z-50 w-full border-b-2 border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
 			<div className="px-6 2xl:px-0 max-w-7xl flex h-16 justify-between items-center mx-auto">
@@ -73,13 +91,13 @@ const Navbar = ({ user }: NavbarProps) => {
 					{user && (
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
-								<Button variant="outline" size="icon" className="rounded-full">
-									{user.email}
+								<Button variant="outline" className="rounded-full" size="icon">
+									{userInitials ? userInitials : <UserIcon />}
 								</Button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align="end">
 								<DropdownMenuLabel className="font-bold">
-									My Account
+									{user.user_metadata?.username ?? user.email}
 								</DropdownMenuLabel>
 								<DropdownMenuSeparator />
 								<DropdownMenuItem>My Profile</DropdownMenuItem>
