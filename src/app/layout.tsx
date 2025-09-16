@@ -5,6 +5,7 @@ import Footer from "@/components/Footer/Footer";
 import Navbar from "@/components/Navbar/Navbar";
 import { ThemeProvider } from "@/components/Theme/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { createClient } from "@/lib/supabase/server";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -21,11 +22,14 @@ export const metadata: Metadata = {
 	description: "Create threads and talk to people",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const supabase = await createClient();
+	const { data } = await supabase.auth.getUser();
+
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body
@@ -38,7 +42,7 @@ export default function RootLayout({
 					disableTransitionOnChange
 				>
 					<Toaster />
-					<Navbar />
+					<Navbar user={data.user} />
 					{children}
 					<Footer />
 				</ThemeProvider>
