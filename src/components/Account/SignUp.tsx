@@ -25,6 +25,10 @@ const SignUp = () => {
 		handleSubmit,
 		formState: { errors },
 	} = useForm<SignUpFormData>({ resolver: zodResolver(signUpSchema) });
+	const firstNameInput = useId();
+	const lastNameInput = useId();
+	const firstNameError = useId();
+	const lastNameError = useId();
 	const userNameInput = useId();
 	const userNameError = useId();
 	const passwordInput = useId();
@@ -42,6 +46,8 @@ const SignUp = () => {
 				options: {
 					data: {
 						username: values.username,
+						first_name: values.firstName,
+						last_name: values.lastName,
 					},
 				},
 			});
@@ -75,6 +81,54 @@ const SignUp = () => {
 				<Separator />
 			</div>
 			<form onSubmit={handleSubmit(onSubmit)} className="px-6 mb-4">
+				<div className="mb-3 grid grid-cols-1 sm:grid-cols-2 sm:gap-3">
+					<div>
+						<Label htmlFor={firstNameInput}>First Name</Label>
+						<Input
+							placeholder="John"
+							type="string"
+							id={firstNameInput}
+							className="mb-3 mt-2 placeholder:text-gray-400"
+							{...register("firstName")}
+							aria-describedby={firstNameError}
+						/>
+						<p
+							className="text-xs text-red-400 h-3 flex gap-1 font-bold"
+							role="alert"
+							id={firstNameError}
+						>
+							{errors.firstName && (
+								<>
+									<CircleX size={15} />
+									{errors.firstName.message}
+								</>
+							)}
+						</p>
+					</div>
+					<div>
+						<Label htmlFor={lastNameInput}>Last Name</Label>
+						<Input
+							placeholder="Doe"
+							type="string"
+							id={lastNameInput}
+							className="mb-3 mt-2 placeholder:text-gray-400"
+							{...register("lastName")}
+							aria-describedby={lastNameError}
+						/>
+						<p
+							className="text-xs text-red-400 h-3 flex gap-1 font-bold"
+							role="alert"
+							id={lastNameError}
+						>
+							{errors.lastName && (
+								<>
+									<CircleX size={15} />
+									{errors.lastName.message}
+								</>
+							)}
+						</p>
+					</div>
+				</div>
 				<div className="mb-3">
 					<Label htmlFor={userNameInput}>Username</Label>
 					<Input
