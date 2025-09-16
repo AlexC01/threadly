@@ -8,7 +8,7 @@ import {
 	LoaderCircle,
 	Send,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -36,10 +36,12 @@ const ThreadComments = ({
 	const [loading, setLoading] = useState(false);
 	const [loadingComments, setLoadingComments] = useState(false);
 	const [content, setContent] = useState("");
-	const [comments, setComments] = useState(initialComments);
+	const [comments, setComments] = useState<ThreadCommentsType[]>([]);
 
 	const [page, setPage] = useState(1);
-	const [hasMore, setHasMore] = useState(comments.length === MAX_COMMENTS);
+	const [hasMore, setHasMore] = useState(
+		initialComments.length === MAX_COMMENTS,
+	);
 
 	const fetchComments = async (pageNumber: number) => {
 		setLoadingComments(true);
@@ -54,11 +56,15 @@ const ThreadComments = ({
 
 			if (error) throw new Error();
 			else {
+				const cleanComments = data.map((comment) => {
+					const clean = DOMPurify.sanitize(comment.content);
+					return { ...comment, content: clean };
+				});
 				if (pageNumber === 0) {
-					setComments(data);
+					setComments(cleanComments);
 					setPage(1);
 				} else {
-					setComments((prev) => [...prev, ...data]);
+					setComments((prev) => [...prev, ...cleanComments]);
 					setPage((prevPage) => prevPage + 1);
 				}
 				setHasMore(data.length === MAX_COMMENTS);
@@ -92,6 +98,16 @@ const ThreadComments = ({
 			setLoading(false);
 		}
 	};
+
+	useEffect(() => {
+		if (initialComments.length > 0) {
+			const commentsContent = initialComments.map((comment) => {
+				const clean = DOMPurify.sanitize(comment.content);
+				return { ...comment, content: clean };
+			});
+			setComments(commentsContent);
+		}
+	}, [initialComments]);
 
 	return (
 		<div className="mt-20">
@@ -139,8 +155,7 @@ const ThreadComments = ({
 			)}
 			<div className="mt-5 relative">
 				{comments.length > 0 &&
-					comments.map((comment) => {
-						const clean = DOMPurify.sanitize(comment.content);
+					comments.map((comment, index) => {
 						return (
 							<Card key={comment.id} className="p-4 flex flex-col mb-7 gap-5">
 								<p className="text-muted-foreground text-sm">
@@ -149,7 +164,7 @@ const ThreadComments = ({
 								</p>
 								<div
 									className="mt-0 tiptap"
-									dangerouslySetInnerHTML={{ __html: clean }}
+									dangerouslySetInnerHTML={{ __html: comment.content }}
 								/>
 								<div className="flex flex-row gap-2 items-center mt-2">
 									<button
