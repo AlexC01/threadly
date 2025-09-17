@@ -3,6 +3,7 @@ import Link from "next/link";
 import Threads from "@/components/Home/Threads";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import routes from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 
 const PAGE_SIZE = 2;
@@ -50,10 +51,16 @@ export default async function Home() {
 						<ul className="list-disc [&>li]:mt-2 -mt-2">
 							<li>Bookmark favorite threads</li>
 							<li>Manage your own posts</li>
-							<li>Get a persistent anonymous ID</li>
+							<li>Get a persistent username ID</li>
 						</ul>
-						<Button className="mt-2" variant="outline">
-							Sign Up / Log In
+						<Button
+							className="mt-2 uppercase font-bold"
+							variant="outline"
+							asChild
+						>
+							<Link href={data.user ? routes.profile : routes.account}>
+								{data.user ? "Profile" : "Sign Up / Log In"}
+							</Link>
 						</Button>
 					</Card>
 					<Card className="flex flex-col items-center text-center">
