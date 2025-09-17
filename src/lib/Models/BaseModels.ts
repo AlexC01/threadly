@@ -7,6 +7,13 @@ export type CorrectedThreadWithStats = Omit<ThreadWithStats, "user_vote"> & {
 	user_vote: number | null;
 };
 
+export type ThreadBookmarks =
+	Database["public"]["Functions"]["get_bookmarked_threads"]["Returns"][number];
+
+export type CorrectedThreadBookmarks = Omit<ThreadBookmarks, "user_vote"> & {
+	user_vote: number | null;
+};
+
 export type ThreadSingle =
 	Database["public"]["Functions"]["get_thread_details_by_slug"]["Returns"][number];
 

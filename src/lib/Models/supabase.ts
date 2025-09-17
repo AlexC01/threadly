@@ -309,6 +309,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_bookmarked_threads: {
+        Args: { current_user_id: string }
+        Returns: {
+          comment_count: number
+          content: string
+          created_at: string
+          id: number
+          is_bookmarked: boolean
+          slug: string
+          title: string
+          user_id: string
+          user_vote: number
+          username: string
+          vote_count: number
+        }[]
+      }
       get_posts_for_thread: {
         Args: { current_user_id?: string; thread_id_input: number }
         Returns: {
