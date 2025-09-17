@@ -10,7 +10,10 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 	const { data } = await supabase.auth.getUser();
 
 	const { data: thread, error } = await supabase
-		.rpc("get_thread_details_by_slug", { slug_input: slug })
+		.rpc("get_thread_details_by_slug", {
+			slug_input: slug,
+			current_user_id: data.user ? data.user.id : undefined,
+		})
 		.single();
 
 	if (error || !thread) {
