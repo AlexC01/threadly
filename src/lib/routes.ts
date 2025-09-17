@@ -3,6 +3,7 @@ const routes = {
 	about: "/about",
 	account: "/account",
 	profile: "/profile",
+	bookmarks: "/bookmarks",
 	guidelines: "/guidelines",
 	thread: "/thread",
 };

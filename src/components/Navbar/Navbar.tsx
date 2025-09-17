@@ -101,7 +101,9 @@ const Navbar = ({ user }: NavbarProps) => {
 								</DropdownMenuLabel>
 								<DropdownMenuSeparator />
 								<DropdownMenuItem>My Profile</DropdownMenuItem>
-								<DropdownMenuItem>My Bookmarks</DropdownMenuItem>
+								<DropdownMenuItem asChild>
+									<Link href={routes.bookmarks}>Bookmarks</Link>
+								</DropdownMenuItem>
 								<DropdownMenuItem>Settings</DropdownMenuItem>
 								<DropdownMenuSeparator />
 								<DropdownMenuItem
