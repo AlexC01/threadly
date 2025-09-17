@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import type { CorrectedThreadBookmarks } from "@/lib/Models/BaseModels";
+import { calculateScore, handleLikesThreads } from "@/lib/services/handleLikes";
 import useAuth from "@/lib/stores/useAuth";
 import { supabase } from "@/lib/supabase/client";
 import ThreadCard from "../Threads/ThreadCard";
@@ -31,11 +32,7 @@ const BookmarksLayout = ({ initialThreads }: BookmarksLayoutProps) => {
 		if (!currentThread) return;
 
 		const currentVote = currentThread.user_vote;
-		let scoreChange = 0;
-
-		if (currentVote === null) scoreChange = voteType!;
-		else if (voteType === null) scoreChange = -currentVote;
-		else scoreChange = voteType - currentVote;
+		const scoreChange = calculateScore(currentVote, voteType);
 
 		setThreads((prevThreads) =>
 			prevThreads.map((t) =>
@@ -49,27 +46,8 @@ const BookmarksLayout = ({ initialThreads }: BookmarksLayoutProps) => {
 			),
 		);
 
-		try {
-			if (voteType === null) {
-				const { error } = await supabase
-					.from("thread_votes")
-					.delete()
-					.match({ user_id: user.id, thread_id: threadId });
-
-				if (error) toast.error("Failed to remove vote.");
-			} else {
-				const { error } = await supabase
-					.from("thread_votes")
-					.upsert(
-						{ thread_id: threadId, vote_type: voteType, user_id: user.id },
-						{ onConflict: "thread_id, user_id" },
-					);
-
-				if (error) toast.error("Failed to cast vote.");
-			}
-		} catch (err) {
-			toast.error("Error while voting");
-		}
+		const resp = await handleLikesThreads(threadId, voteType, user.id);
+		if (resp) toast.error(resp);
 	};
 
 	return (
