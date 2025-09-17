@@ -322,7 +322,7 @@ export type Database = {
         }[]
       }
       get_thread_details_by_slug: {
-        Args: { slug_input: string }
+        Args: { current_user_id?: string; slug_input: string }
         Returns: {
           comment_count: number
           content: string
@@ -331,12 +331,13 @@ export type Database = {
           slug: string
           title: string
           user_id: string
+          user_vote: number
           username: string
           vote_count: number
         }[]
       }
       get_threads_with_stats: {
-        Args: { sort_by: string }
+        Args: { current_user_id?: string; sort_by: string }
         Returns: {
           comment_count: number
           content: string
@@ -345,6 +346,7 @@ export type Database = {
           slug: string
           title: string
           user_id: string
+          user_vote: number
           username: string
           vote_count: number
         }[]
