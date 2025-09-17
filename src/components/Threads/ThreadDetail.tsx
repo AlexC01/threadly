@@ -31,9 +31,11 @@ const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
 		username,
 		id,
 		user_vote,
+		is_bookmarked,
 	} = thread;
 	const [voteCount, setVoteCount] = useState(vote_count);
 	const [userVote, setUserVote] = useState(user_vote);
+	const [isBookmarked, setIsBookmarked] = useState(is_bookmarked);
 
 	const handleLikes = async (voteType: number | null) => {
 		if (!user) {
@@ -74,6 +76,32 @@ const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
 		}
 	};
 
+	const handleBookmark = async () => {
+		if (!user) {
+			toast.error("In order to vote please log in or create an account");
+			return;
+		}
+		const value = isBookmarked;
+		setIsBookmarked(!isBookmarked);
+
+		try {
+			if (!value) {
+				const { error } = await supabase
+					.from("bookmarks")
+					.insert({ thread_id: id, user_id: user.id });
+				if (error) toast.error("Failed to add bookmark.");
+			} else {
+				const { error } = await supabase
+					.from("bookmarks")
+					.delete()
+					.match({ user_id: user.id, thread_id: id });
+				if (error) toast.error("Failed to remove bookmark.");
+			}
+		} catch (err) {
+			toast.error("Error while doing this action, please try again");
+		}
+	};
+
 	return (
 		<>
 			<Card className="px-4 sm:px-3 md:px-6 flex flex-col">
@@ -105,11 +133,11 @@ const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
 					</div>
 					<Button
 						variant="outline"
-						className="flex items-center gap-1.5 text-lg"
-						size="lg"
+						onClick={handleBookmark}
+						className={`flex items-center font-bold gap-1.5 uppercase text-lg ${isBookmarked ? "translate-x-0.5 translate-y-0.5 shadow-none bg-accent text-white" : ""}`}
+						size="icon"
 					>
-						<Bookmark />
-						Save
+						<Bookmark fill={isBookmarked ? "white" : "none"} />
 					</Button>
 				</div>
 			</Card>

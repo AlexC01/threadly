@@ -328,6 +328,7 @@ export type Database = {
           content: string
           created_at: string
           id: number
+          is_bookmarked: boolean
           slug: string
           title: string
           user_id: string
