@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import routes from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 4;
 
 export default async function Home() {
 	const supabase = await createClient();

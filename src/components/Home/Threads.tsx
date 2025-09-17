@@ -15,7 +15,7 @@ interface ThreadsProps {
 	initialThreads: CorrectedThreadWithStats[];
 }
 const sortOptions = ["new", "top", "hot"];
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 4;
 
 const Threads = ({ initialThreads }: ThreadsProps) => {
 	const { user } = useAuth();
