@@ -1,15 +1,19 @@
 import { ArrowBigDown, ArrowBigUp, MessageCircleMore } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import type { ThreadWithStats } from "@/lib/Models/BaseModels";
+import type { CorrectedThreadWithStats } from "@/lib/Models/BaseModels";
 import routes from "@/lib/routes";
 import TimeAgo from "../TimeAgo";
 
 interface ThreadCardProps {
-	thread: ThreadWithStats;
+	thread: CorrectedThreadWithStats;
+	handleLikeThread: (
+		threadId: number,
+		voteType: number | null,
+	) => Promise<void>;
 }
 
-const ThreadCard = ({ thread }: ThreadCardProps) => {
+const ThreadCard = ({ thread, handleLikeThread }: ThreadCardProps) => {
 	const {
 		title,
 		slug,
@@ -18,14 +22,19 @@ const ThreadCard = ({ thread }: ThreadCardProps) => {
 		comment_count,
 		username,
 		created_at,
+		user_vote,
+		id,
 	} = thread;
+
+	console.log(user_vote);
 
 	return (
 		<Card className="relative group px-4 sm:px-3 md:pl-2 md:pr-4 flex flex-row gap-3 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
 			<div className="hidden md:flex flex-col justify-center items-center gap-3 border-r pr-1 z-10 relative">
 				<button
 					type="button"
-					className="transition-all duration-200 cursor-pointer hover:bg-red-300 hover:text-red-600 p-1 rounded-full"
+					onClick={() => handleLikeThread(id, user_vote === 1 ? null : 1)}
+					className={`transition-all duration-200 cursor-pointer hover:bg-red-300 hover:text-red-600 p-1 rounded-full ${user_vote === 1 ? "bg-red-300 text-red-600" : ""}`}
 				>
 					<ArrowBigUp />
 				</button>
@@ -34,7 +43,8 @@ const ThreadCard = ({ thread }: ThreadCardProps) => {
 				</span>
 				<button
 					type="button"
-					className="transition-all duration-200 cursor-pointer hover:bg-red-300 hover:text-red-600 p-1 rounded-full"
+					onClick={() => handleLikeThread(id, user_vote === -1 ? null : -1)}
+					className={`transition-all duration-200 cursor-pointer hover:bg-red-300 hover:text-red-600 p-1 rounded-full ${user_vote === -1 ? "bg-red-300 text-red-600" : ""}`}
 				>
 					<ArrowBigDown />
 				</button>

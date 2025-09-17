@@ -1,21 +1,26 @@
+/** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
+/** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
 "use client";
 
 import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import type { ThreadWithStats } from "@/lib/Models/BaseModels";
+import type { CorrectedThreadWithStats } from "@/lib/Models/BaseModels";
+import useAuth from "@/lib/stores/useAuth";
 import { supabase } from "@/lib/supabase/client";
 import ThreadCard from "../Threads/ThreadCard";
 
 interface ThreadsProps {
-	initialThreads: ThreadWithStats[];
+	initialThreads: CorrectedThreadWithStats[];
 }
 const sortOptions = ["new", "top", "hot"];
 const PAGE_SIZE = 2;
 
 const Threads = ({ initialThreads }: ThreadsProps) => {
+	const { user } = useAuth();
 	const [sort, setSort] = useState("new");
-	const [threads, setThreads] = useState<ThreadWithStats[]>(
+	const [threads, setThreads] = useState<CorrectedThreadWithStats[]>(
 		initialThreads || [],
 	);
 	const [loading, setLoading] = useState(false);
@@ -32,6 +37,7 @@ const Threads = ({ initialThreads }: ThreadsProps) => {
 			const { data, error } = await supabase
 				.rpc("get_threads_with_stats", {
 					sort_by: sort,
+					current_user_id: user ? user.id : undefined,
 				})
 				.range(from, to);
 
@@ -48,6 +54,60 @@ const Threads = ({ initialThreads }: ThreadsProps) => {
 		}
 	};
 
+	const handleLikeThread = async (
+		threadId: number,
+		voteType: number | null,
+	) => {
+		if (!user) {
+			toast.error("In order to vote please log in or create an account");
+			return;
+		}
+
+		const currentThread = threads.find((t) => t.id === threadId);
+		if (!currentThread) return;
+
+		const currentVote = currentThread.user_vote;
+		let scoreChange = 0;
+
+		if (currentVote === null) scoreChange = voteType!;
+		else if (voteType === null) scoreChange = -currentVote;
+		else scoreChange = voteType - currentVote;
+
+		setThreads((prevThreads) =>
+			prevThreads.map((t) =>
+				t.id === threadId
+					? {
+							...t,
+							vote_count: t.vote_count + scoreChange,
+							user_vote: voteType,
+						}
+					: t,
+			),
+		);
+
+		try {
+			if (voteType === null) {
+				const { error } = await supabase
+					.from("thread_votes")
+					.delete()
+					.match({ user_id: user.id, thread_id: threadId });
+
+				if (error) toast.error("Failed to remove vote.");
+			} else {
+				const { error } = await supabase
+					.from("thread_votes")
+					.upsert(
+						{ thread_id: threadId, vote_type: voteType, user_id: user.id },
+						{ onConflict: "thread_id, user_id" },
+					);
+
+				if (error) toast.error("Failed to cast vote.");
+			}
+		} catch (err) {
+			toast.error("Error while voting");
+		}
+	};
+
 	useEffect(() => {
 		const fetchThreads = async () => {
 			setLoading(true);
@@ -56,6 +116,7 @@ const Threads = ({ initialThreads }: ThreadsProps) => {
 				const { data, error } = await supabase
 					.rpc("get_threads_with_stats", {
 						sort_by: sort,
+						current_user_id: user ? user.id : undefined,
 					})
 					.range(0, PAGE_SIZE - 1);
 
@@ -106,7 +167,11 @@ const Threads = ({ initialThreads }: ThreadsProps) => {
 				)}
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 					{threads.map((thread) => (
-						<ThreadCard key={thread.id} thread={thread} />
+						<ThreadCard
+							key={thread.id}
+							thread={thread}
+							handleLikeThread={handleLikeThread}
+						/>
 					))}
 				</div>
 			</section>

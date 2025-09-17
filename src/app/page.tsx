@@ -10,8 +10,13 @@ const PAGE_SIZE = 2;
 export default async function Home() {
 	const supabase = await createClient();
 
+	const { data } = await supabase.auth.getUser();
+
 	const { data: threads } = await supabase
-		.rpc("get_threads_with_stats", { sort_by: "new" })
+		.rpc("get_threads_with_stats", {
+			sort_by: "new",
+			current_user_id: data.user ? data.user.id : undefined,
+		})
 		.range(0, PAGE_SIZE - 1);
 
 	return (
