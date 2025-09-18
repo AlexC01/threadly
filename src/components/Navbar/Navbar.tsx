@@ -87,7 +87,11 @@ const Navbar = ({ user }: NavbarProps) => {
 					</div>
 				</div>
 				<div className="hidden md:flex items-center space-x-4">
-					<Button variant="default">Create Thread</Button>
+					<Button variant="default" asChild>
+						<Link href={routes.createThread} prefetch={false}>
+							Create Thread
+						</Link>
+					</Button>
 					{user && (
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
@@ -100,7 +104,7 @@ const Navbar = ({ user }: NavbarProps) => {
 									{user.user_metadata?.username ?? user.email}
 								</DropdownMenuLabel>
 								<DropdownMenuSeparator />
-								<DropdownMenuItem>My Profile</DropdownMenuItem>
+								<DropdownMenuItem>Profile</DropdownMenuItem>
 								<DropdownMenuItem asChild>
 									<Link href={routes.bookmarks}>Bookmarks</Link>
 								</DropdownMenuItem>

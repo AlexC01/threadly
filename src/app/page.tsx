@@ -32,8 +32,14 @@ export default async function Home() {
 					</h2>
 				</div>
 				<div className="flex justify-center px-4">
-					<Button variant="default" className="font-bold px-12 text-xl py-8">
-						Create Thread
+					<Button
+						variant="default"
+						className="font-bold px-12 text-xl py-8"
+						asChild
+					>
+						<Link href={routes.createThread} prefetch={false}>
+							Create Thread
+						</Link>
 					</Button>
 				</div>
 				<div className="mt-10 px-4 md:px-8">

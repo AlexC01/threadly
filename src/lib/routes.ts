@@ -6,6 +6,7 @@ const routes = {
 	bookmarks: "/bookmarks",
 	guidelines: "/guidelines",
 	thread: "/thread",
+	createThread: "/thread/create",
 };
 
 export const publicRoutes = [routes.account];
