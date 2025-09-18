@@ -2,6 +2,7 @@
 /** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
 "use client";
 
+import DOMPurify from "dompurify";
 import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -11,6 +12,15 @@ import { calculateScore, handleLikesThreads } from "@/lib/services/handleLikes";
 import useAuth from "@/lib/stores/useAuth";
 import { supabase } from "@/lib/supabase/client";
 import ThreadCard from "../Threads/ThreadCard";
+
+const sanitizeContent = (threads: CorrectedThreadWithStats[]) => {
+	const threadContent = threads.map((t) => {
+		const clean = DOMPurify.sanitize(t.content);
+		return { ...t, content: clean };
+	});
+
+	return threadContent;
+};
 
 interface ThreadsProps {
 	initialThreads: CorrectedThreadWithStats[];
@@ -44,7 +54,7 @@ const Threads = ({ initialThreads }: ThreadsProps) => {
 
 			if (error) console.error("Error fetching more threads", error);
 			else {
-				setThreads((prev) => [...prev, ...data]);
+				setThreads((prev) => [...prev, ...sanitizeContent(data)]);
 				setPage((prevPage) => prevPage + 1);
 				if (data.length < PAGE_SIZE) setHasMore(false);
 			}
@@ -101,7 +111,7 @@ const Threads = ({ initialThreads }: ThreadsProps) => {
 				if (error) {
 					console.error("Error fetching threeds", error);
 				} else {
-					setThreads(data || []);
+					setThreads(sanitizeContent(data));
 					setPage(1);
 					setHasMore(true);
 				}
@@ -114,7 +124,9 @@ const Threads = ({ initialThreads }: ThreadsProps) => {
 		};
 		if (sort !== "new") fetchThreads();
 		else {
-			setThreads(initialThreads);
+			if (initialThreads.length > 0)
+				setThreads(sanitizeContent(initialThreads));
+
 			setPage(1);
 			setHasMore(true);
 		}

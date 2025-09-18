@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/security/noDangerouslySetInnerHtml: <i already cleaned the html> */
 import { ArrowBigDown, ArrowBigUp, MessageCircleMore } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -60,9 +61,12 @@ const ThreadCard = ({ thread, handleLikeThread }: ThreadCardProps) => {
 						<span className="absolute inset-0" aria-hidden="true" />
 					</Link>
 				</h2>
-				<p className="lg:max-w-prose line-clamp-3 text-muted-foreground">
-					{content}
-				</p>
+
+				<div
+					className="mt-0 tiptap lg:max-w-prose line-clamp-3 text-muted-foreground"
+					dangerouslySetInnerHTML={{ __html: content }}
+				/>
+
 				<div className="mt-auto pt-4 flex justify-between items-center">
 					<p className="hidden md:block text-muted-foreground text-xs">
 						{!username ? "Anonymous" : username} -{" "}

@@ -1,8 +1,9 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
+/** biome-ignore-all lint/security/noDangerouslySetInnerHtml: <Im already cleaning the HTML> */
 "use client";
 
+import DOMPurify from "dompurify";
 import { ArrowBigDown, ArrowBigUp, Bookmark } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -24,7 +25,6 @@ const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
 	const { user } = useAuth();
 	const {
 		title,
-		content,
 		vote_count,
 		comment_count,
 		created_at,
@@ -36,6 +36,7 @@ const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
 	const [voteCount, setVoteCount] = useState(vote_count);
 	const [userVote, setUserVote] = useState(user_vote);
 	const [isBookmarked, setIsBookmarked] = useState(is_bookmarked);
+	const [content, setContent] = useState("");
 
 	const handleLikes = async (voteType: number | null) => {
 		if (!user) {
@@ -102,6 +103,11 @@ const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
 		}
 	};
 
+	useEffect(() => {
+		const clean = DOMPurify.sanitize(thread.content);
+		setContent(clean);
+	}, [thread]);
+
 	return (
 		<>
 			<Card className="px-4 sm:px-3 md:px-6 flex flex-col">
@@ -110,7 +116,10 @@ const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
 					<TimeAgo dateString={created_at} />
 				</p>
 				<h2 className="font-bold text-2xl md:text-4xl">{title}</h2>
-				<p className="text-muted-foreground text-lg">{content}</p>
+				<div
+					className="mt-0 tiptap text-muted-foreground"
+					dangerouslySetInnerHTML={{ __html: content }}
+				/>
 				<div className="flex justify-between items-center">
 					<div className="flex flex-row gap-2 items-center">
 						<button
