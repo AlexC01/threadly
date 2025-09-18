@@ -141,12 +141,14 @@ interface TipTapEditorProps {
 	onChange: (richText: string) => void;
 	content: string;
 	limit: number;
+	big?: boolean;
 }
 
 export const TiptapEditor = ({
 	onChange,
 	content,
 	limit,
+	big,
 }: TipTapEditorProps) => {
 	// The "Brain"
 	const editor = useEditor({
@@ -154,7 +156,7 @@ export const TiptapEditor = ({
 		immediatelyRender: false,
 		editorProps: {
 			attributes: {
-				class: "rounded-md border min-h-[150px] border-input bg-background p-4",
+				class: `rounded-md border ${big ? `min-h-[350px]` : "min-h-[150px]"} border-input bg-background p-4`,
 			},
 		},
 		onUpdate({ editor }) {
