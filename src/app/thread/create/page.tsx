@@ -1,6 +1,11 @@
 import CreateThreadForm from "@/components/Threads/CreateThreadForm";
+import { createClient } from "@/lib/supabase/server";
 
-const page = () => {
+const page = async () => {
+	const supabase = await createClient();
+
+	const { data } = await supabase.auth.getUser();
+
 	return (
 		<main className="min-h-screen">
 			<div className="max-w-7xl mx-auto py-12 md:py-16">
@@ -10,7 +15,7 @@ const page = () => {
 					</h1>
 				</div>
 				<div className="mt-6 px-4 md:px-8">
-					<CreateThreadForm />
+					<CreateThreadForm currentUser={data.user} />
 				</div>
 			</div>
 		</main>
