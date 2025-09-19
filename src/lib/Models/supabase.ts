@@ -217,14 +217,17 @@ export type Database = {
       }
       profiles: {
         Row: {
+          created_at: string | null
           id: string
           username: string | null
         }
         Insert: {
+          created_at?: string | null
           id: string
           username?: string | null
         }
         Update: {
+          created_at?: string | null
           id?: string
           username?: string | null
         }
@@ -325,6 +328,19 @@ export type Database = {
           vote_count: number
         }[]
       }
+      get_posts_by_user: {
+        Args: { current_user_id?: string; user_id_input: string }
+        Returns: {
+          post_content: string
+          post_created_at: string
+          post_id: number
+          thread_id: number
+          thread_slug: string
+          thread_title: string
+          user_vote: number
+          vote_count: number
+        }[]
+      }
       get_posts_for_thread: {
         Args: { current_user_id?: string; thread_id_input: number }
         Returns: {
@@ -353,6 +369,22 @@ export type Database = {
           vote_count: number
         }[]
       }
+      get_threads_by_user: {
+        Args: { current_user_id?: string; user_id_input: string }
+        Returns: {
+          comment_count: number
+          content: string
+          created_at: string
+          id: number
+          is_bookmarked: boolean
+          slug: string
+          title: string
+          user_id: string
+          user_vote: number
+          username: string
+          vote_count: number
+        }[]
+      }
       get_threads_with_stats: {
         Args: { current_user_id?: string; sort_by: string }
         Returns: {
@@ -366,6 +398,13 @@ export type Database = {
           user_vote: number
           username: string
           vote_count: number
+        }[]
+      }
+      get_user_stats: {
+        Args: { user_id_input: string }
+        Returns: {
+          post_count: number
+          thread_count: number
         }[]
       }
     }

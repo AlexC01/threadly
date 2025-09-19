@@ -27,3 +27,20 @@ export type ThreadCommentsType =
 export type CorrectedCommentType = Omit<ThreadCommentsType, "user_vote"> & {
 	user_vote: number | null;
 };
+
+export type UserStatsType =
+	Database["public"]["Functions"]["get_user_stats"]["Returns"][number];
+
+export type UserThreadsType =
+	Database["public"]["Functions"]["get_threads_by_user"]["Returns"][number];
+
+export type CorrectedUserThreadsType = Omit<UserThreadsType, "user_vote"> & {
+	user_vote: number | null;
+};
+
+export type UserCommentsType =
+	Database["public"]["Functions"]["get_posts_by_user"]["Returns"][number];
+
+export type CorrectedUserCommentsType = Omit<UserCommentsType, "user_vote"> & {
+	user_vote: number | null;
+};

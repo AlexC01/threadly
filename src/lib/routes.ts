@@ -10,6 +10,6 @@ const routes = {
 };
 
 export const publicRoutes = [routes.account];
-export const protectedRoutes = [routes.profile];
+export const protectedRoutes = [routes.profile, routes.bookmarks];
 
 export default routes;
