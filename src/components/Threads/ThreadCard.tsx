@@ -28,7 +28,7 @@ const ThreadCard = ({ thread, handleLikeThread }: ThreadCardProps) => {
 	} = thread;
 
 	return (
-		<Card className="relative group px-4 sm:px-3 md:pl-2 md:pr-4 flex flex-row gap-3 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
+		<Card className="relative group px-4 sm:px-3 md:pl-2 md:pr-4 flex sm:flex-row gap-3 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer ">
 			<div className="hidden md:flex flex-col justify-center items-center gap-3 border-r pr-1 z-10 relative">
 				<button
 					type="button"

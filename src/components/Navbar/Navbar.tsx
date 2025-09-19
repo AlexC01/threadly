@@ -104,7 +104,9 @@ const Navbar = ({ user }: NavbarProps) => {
 									{user.user_metadata?.username ?? user.email}
 								</DropdownMenuLabel>
 								<DropdownMenuSeparator />
-								<DropdownMenuItem>Profile</DropdownMenuItem>
+								<DropdownMenuItem asChild>
+									<Link href={routes.profile}>Profile</Link>
+								</DropdownMenuItem>
 								<DropdownMenuItem asChild>
 									<Link href={routes.bookmarks}>Bookmarks</Link>
 								</DropdownMenuItem>
