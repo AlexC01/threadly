@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { CorrectedCommentType } from "@/lib/Models/BaseModels";
+import { calculateScore } from "@/lib/services/handleLikes";
 import useAuth from "@/lib/stores/useAuth";
 import { supabase } from "@/lib/supabase/client";
 import { TiptapEditor } from "../RichTextEditor";
@@ -114,11 +115,7 @@ const ThreadComments = ({
 		if (!currentComment) return;
 
 		const currentVote = currentComment.user_vote;
-		let scoreChange = 0;
-
-		if (currentVote === null) scoreChange = voteType!;
-		else if (voteType === null) scoreChange = -currentVote;
-		else scoreChange = voteType - currentVote;
+		const scoreChange = calculateScore(currentVote, voteType);
 
 		setComments((prevComments) =>
 			prevComments.map((c) =>

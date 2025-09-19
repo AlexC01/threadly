@@ -1,25 +1,36 @@
+/** biome-ignore-all lint/security/noDangerouslySetInnerHtml: <explanation> */
 "use client";
-import { useState } from "react";
+import DOMPurify from "dompurify";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type {
 	CorrectedUserCommentsType,
 	CorrectedUserThreadsType,
 } from "@/lib/Models/BaseModels";
+import routes from "@/lib/routes";
 import { calculateScore, handleLikesThreads } from "@/lib/services/handleLikes";
 import useAuth from "@/lib/stores/useAuth";
 import ThreadCard from "../Threads/ThreadCard";
+import TimeAgo from "../TimeAgo";
 
 interface UserContentProps {
 	initialThreads: CorrectedUserThreadsType[];
 	profile: boolean;
-	comments: CorrectedUserCommentsType[];
+	initialComments: CorrectedUserCommentsType[];
 }
 
-const UserContent = ({ initialThreads, profile }: UserContentProps) => {
+const UserContent = ({
+	initialThreads,
+	profile,
+	initialComments,
+}: UserContentProps) => {
 	const [threads, setThreads] = useState<CorrectedUserThreadsType[]>(
 		initialThreads || [],
 	);
+	const [comments, setComments] = useState<CorrectedUserCommentsType[]>([]);
 	const { user } = useAuth();
 
 	const handleLikeThread = async (
@@ -48,6 +59,16 @@ const UserContent = ({ initialThreads, profile }: UserContentProps) => {
 		const resp = await handleLikesThreads(threadId, voteType, user.id);
 		if (resp) toast.error(resp);
 	};
+
+	useEffect(() => {
+		if (initialComments.length > 0) {
+			const commentsContent = initialComments.map((comment) => {
+				const clean = DOMPurify.sanitize(comment.post_content);
+				return { ...comment, post_content: clean };
+			});
+			setComments(commentsContent);
+		}
+	}, [initialComments]);
 
 	return (
 		<div className="mt-8 px-4 md:px-8">
@@ -83,6 +104,43 @@ const UserContent = ({ initialThreads, profile }: UserContentProps) => {
 										thread={thread}
 										handleLikeThread={handleLikeThread}
 									/>
+								))}
+							</div>
+						)}
+					</section>
+				</TabsContent>
+				<TabsContent value="replies" className="mt-4">
+					<section className="mt-10 relative">
+						{comments.length === 0 && (
+							<p className="text-center font-bold text-lg">
+								{profile
+									? "You dont have any replies posted yet"
+									: "User does not have any replies"}
+							</p>
+						)}
+						{comments.length > 0 && (
+							<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+								{comments.map((comment) => (
+									<Card
+										key={comment.post_id}
+										className="p-4 flex-col mb-7 gap-5"
+									>
+										<p className="text-muted-foreground text-sm">
+											Replied to{" "}
+											<Link
+												href={`${routes.thread}/${comment.thread_slug}`}
+												className="font-semibold text-foreground hover:underline"
+											>
+												{comment.thread_title}
+											</Link>
+											{" - "}
+											<TimeAgo dateString={comment.post_created_at} />
+										</p>
+										<div
+											className="mt-0 tiptap"
+											dangerouslySetInnerHTML={{ __html: comment.post_content }}
+										/>
+									</Card>
 								))}
 							</div>
 						)}

@@ -49,7 +49,7 @@ const page = async () => {
 				<UserContent
 					initialThreads={threads || []}
 					profile
-					comments={posts || []}
+					initialComments={posts || []}
 				/>
 			</div>
 		</main>
