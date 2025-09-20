@@ -9,12 +9,14 @@ import {
 	LoaderCircle,
 	Send,
 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { CorrectedCommentType } from "@/lib/Models/BaseModels";
+import routes from "@/lib/routes";
 import { calculateScore } from "@/lib/services/handleLikes";
 import useAuth from "@/lib/stores/useAuth";
 import { supabase } from "@/lib/supabase/client";
@@ -212,7 +214,15 @@ const ThreadComments = ({
 						return (
 							<Card key={comment.id} className="p-4 flex flex-col mb-7 gap-5">
 								<p className="text-muted-foreground text-sm">
-									{!comment.username ? "Anonymous" : comment.username} -{" "}
+									{comment.username && (
+										<Link
+											className="font-semibold text-foreground hover:underline z-10 relative"
+											href={`${routes.user}/${comment.username}`}
+										>
+											{comment.username}
+										</Link>
+									)}
+									{!comment.username && "Anonymous"} -{" "}
 									<TimeAgo dateString={comment.created_at} />
 								</p>
 								<div

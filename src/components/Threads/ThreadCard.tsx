@@ -69,8 +69,15 @@ const ThreadCard = ({ thread, handleLikeThread }: ThreadCardProps) => {
 
 				<div className="mt-auto pt-4 flex justify-between items-center">
 					<p className="hidden md:block text-muted-foreground text-xs">
-						{!username ? "Anonymous" : username} -{" "}
-						<TimeAgo dateString={created_at} />
+						{username && (
+							<Link
+								className="font-semibold text-foreground hover:underline z-10 relative"
+								href={`${routes.user}/${username}`}
+							>
+								{username}
+							</Link>
+						)}
+						{!username && "Anonymous"} - <TimeAgo dateString={created_at} />
 					</p>
 					<div className="flex md:hidden flex-row gap-2 items-center z-10 relative">
 						<button type="button">
