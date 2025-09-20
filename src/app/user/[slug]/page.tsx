@@ -7,15 +7,22 @@ import type {
 } from "@/lib/Models/BaseModels";
 import { createClient } from "@/lib/supabase/server";
 
-const page = async () => {
+const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 	const supabase = await createClient();
+
+	const { slug } = await params;
+
+	const { data: profile, error } = await supabase
+		.from("profiles")
+		.select("id, username, created_at")
+		.eq("username", slug)
+		.single();
+
+	if (!profile || error) throw new Error();
 
 	const {
 		data: { user },
-		error,
 	} = await supabase.auth.getUser();
-
-	if (!user || error) throw new Error();
 
 	let stats: UserStatsType | null = null;
 	let threads: CorrectedUserThreadsType[] | null = null;
@@ -23,14 +30,14 @@ const page = async () => {
 
 	try {
 		const [statsRes, threadsRes, postsRes] = await Promise.all([
-			supabase.rpc("get_user_stats", { user_id_input: user.id }).single(),
+			supabase.rpc("get_user_stats", { user_id_input: profile.id }).single(),
 			supabase.rpc("get_threads_by_user", {
-				user_id_input: user.id,
-				current_user_id: user.id,
+				user_id_input: profile.id,
+				current_user_id: user ? user.id : undefined,
 			}),
 			supabase.rpc("get_posts_by_user", {
-				user_id_input: user.id,
-				current_user_id: user.id,
+				user_id_input: profile.id,
+				current_user_id: user ? user.id : undefined,
 			}),
 		]);
 
@@ -41,20 +48,16 @@ const page = async () => {
 		throw new Error();
 	}
 
-	const getName = () => {
-		const username = user.user_metadata?.username ?? "";
-
-		if (username !== "") return username;
-		return "";
-	};
-
 	return (
 		<main className="min-h-screen">
 			<div className="max-w-7xl mx-auto py-12 md:py-16">
 				<ProfileHeader
-					userInfo={{ username: getName(), created_at: user.created_at }}
+					userInfo={{
+						username: profile.username ?? "Anonymous",
+						created_at: profile.created_at ?? "",
+					}}
 					stats={stats}
-					edit
+					edit={user ? user.id === profile.id : false}
 				/>
 				<UserContent
 					initialThreads={threads || []}
