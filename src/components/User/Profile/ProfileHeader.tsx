@@ -6,25 +6,12 @@ import { Card, CardHeader } from "@/components/ui/card";
 import type { UserStatsType } from "@/lib/Models/BaseModels";
 
 interface ProfileHeaderProps {
-	userInfo: User;
+	userInfo: { username: string; created_at: string };
 	stats: UserStatsType | null;
 	edit: boolean;
 }
 
 const ProfileHeader = ({ userInfo, stats, edit }: ProfileHeaderProps) => {
-	const getName = () => {
-		const username = userInfo.user_metadata?.username ?? "";
-
-		if (username !== "") return username;
-
-		const firstName = userInfo.user_metadata?.first_name ?? "";
-		const lastName = userInfo.user_metadata?.last_name ?? "";
-
-		if (firstName !== "" && lastName !== "") return `${firstName} ${lastName}`;
-
-		return userInfo.email ?? "";
-	};
-
 	return (
 		<div className="flex justify-center w-full items-center px-6 md:px-0">
 			<Card className="w-full max-w-md">
@@ -32,7 +19,7 @@ const ProfileHeader = ({ userInfo, stats, edit }: ProfileHeaderProps) => {
 					<div className="border-2 rounded-full p-2">
 						<UserIcon className="h-10 w-10" />
 					</div>
-					<h2 className="mt-2 font-bold text-lg">{getName()}</h2>
+					<h2 className="mt-2 font-bold text-lg">{userInfo.username}</h2>
 					<p>
 						Joined <TimeAgo dateString={userInfo.created_at} />
 					</p>

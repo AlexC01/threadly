@@ -88,7 +88,7 @@ const UserContent = ({
 					</TabsTrigger>
 				</TabsList>
 				<TabsContent value="threads" className="mt-4">
-					<section className="mt-10 relative">
+					<section className="mt-6 relative">
 						{threads.length === 0 && (
 							<p className="text-center font-bold text-lg">
 								{profile
@@ -110,7 +110,7 @@ const UserContent = ({
 					</section>
 				</TabsContent>
 				<TabsContent value="replies" className="mt-4">
-					<section className="mt-10 relative">
+					<section className="mt-6 relative">
 						{comments.length === 0 && (
 							<p className="text-center font-bold text-lg">
 								{profile
