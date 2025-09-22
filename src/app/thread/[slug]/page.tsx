@@ -8,12 +8,14 @@ import { createClient } from "@/lib/supabase/server";
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 	const supabase = await createClient();
 	const { slug } = await params;
-	const { data } = await supabase.auth.getUser();
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
 
 	const { data: thread, error } = await supabase
 		.rpc("get_thread_details_by_slug", {
 			slug_input: slug,
-			current_user_id: data.user ? data.user.id : undefined,
+			current_user_id: user ? user.id : undefined,
 		})
 		.single();
 
@@ -24,7 +26,7 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 	const { data: posts } = await supabase
 		.rpc("get_posts_for_thread", {
 			thread_id_input: thread.id,
-			current_user_id: data.user ? data.user.id : undefined,
+			current_user_id: user ? user.id : undefined,
 		})
 		.range(0, 4);
 
@@ -42,7 +44,11 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 						</span>
 					</Link>
 				</div>
-				<ThreadDetail thread={thread} comments={posts || []} />
+				<ThreadDetail
+					thread={thread}
+					comments={posts || []}
+					currentUser={user}
+				/>
 			</div>
 		</main>
 	);

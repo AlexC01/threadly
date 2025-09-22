@@ -1,16 +1,35 @@
 /** biome-ignore-all lint/security/noDangerouslySetInnerHtml: <Im already cleaning the HTML> */
 "use client";
 
+import { AlertDialogTitle } from "@radix-ui/react-alert-dialog";
+import type { User } from "@supabase/supabase-js";
 import DOMPurify from "dompurify";
-import { ArrowBigDown, ArrowBigUp, Bookmark } from "lucide-react";
+import {
+	ArrowBigDown,
+	ArrowBigUp,
+	Bookmark,
+	LoaderCircle,
+	Trash2,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type {
 	CorrectedCommentType,
 	CorrectedThreadSingle,
 } from "@/lib/Models/BaseModels";
+import { calculateScore, handleLikesThreads } from "@/lib/services/handleLikes";
 import useAuth from "@/lib/stores/useAuth";
 import { supabase } from "@/lib/supabase/client";
 import TimeAgo from "../TimeAgo";
@@ -19,9 +38,11 @@ import ThreadComments from "./ThreadComments";
 interface ThreadDetailProps {
 	thread: CorrectedThreadSingle;
 	comments: CorrectedCommentType[];
+	currentUser: User | null;
 }
 
-const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
+const ThreadDetail = ({ thread, comments, currentUser }: ThreadDetailProps) => {
+	const router = useRouter();
 	const { user } = useAuth();
 	const {
 		title,
@@ -31,12 +52,14 @@ const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
 		username,
 		id,
 		user_vote,
+		user_id,
 		is_bookmarked,
 	} = thread;
 	const [voteCount, setVoteCount] = useState(vote_count);
 	const [userVote, setUserVote] = useState(user_vote);
 	const [isBookmarked, setIsBookmarked] = useState(is_bookmarked);
 	const [content, setContent] = useState("");
+	const [loadingDelete, setLoadingDelete] = useState(false);
 
 	const handleLikes = async (voteType: number | null) => {
 		if (!user) {
@@ -45,36 +68,14 @@ const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
 		}
 
 		const currentVote = userVote;
-		let scoreChange = 0;
-
-		if (currentVote === null) scoreChange = voteType!;
-		else if (voteType === null) scoreChange = -currentVote;
-		else scoreChange = voteType - currentVote;
+		const scoreChange = calculateScore(currentVote, voteType);
 
 		setVoteCount((prevVoteCount) => prevVoteCount + scoreChange);
 		setUserVote(voteType);
 
-		try {
-			if (voteType === null) {
-				const { error } = await supabase
-					.from("thread_votes")
-					.delete()
-					.match({ user_id: user.id, thread_id: id });
+		const resp = await handleLikesThreads(id, voteType, user.id);
 
-				if (error) toast.error("Failed to remove vote.");
-			} else {
-				const { error } = await supabase
-					.from("thread_votes")
-					.upsert(
-						{ thread_id: id, vote_type: voteType, user_id: user.id },
-						{ onConflict: "thread_id, user_id" },
-					);
-
-				if (error) toast.error("Failed to cast vote.");
-			}
-		} catch (err) {
-			toast.error("Error while voting");
-		}
+		if (resp) toast.error(resp);
 	};
 
 	const handleBookmark = async () => {
@@ -103,6 +104,25 @@ const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
 		}
 	};
 
+	const deleteThread = async () => {
+		setLoadingDelete(true);
+		try {
+			const { error } = await supabase.from("threads").delete().match({ id });
+			if (error) throw new Error();
+
+			toast.success("Thread deleted successfully");
+
+			router.replace("/");
+			router.refresh();
+		} catch (err) {
+			toast.error(
+				"There was an error deleting the thread, please try again later",
+			);
+		} finally {
+			setLoadingDelete(false);
+		}
+	};
+
 	useEffect(() => {
 		const clean = DOMPurify.sanitize(thread.content);
 		setContent(clean);
@@ -111,10 +131,42 @@ const ThreadDetail = ({ thread, comments }: ThreadDetailProps) => {
 	return (
 		<>
 			<Card className="px-4 sm:px-3 md:px-6 flex flex-col">
-				<p className="text-muted-foreground text-sm mb-1">
-					{!username ? "Anonymous" : username} -{" "}
-					<TimeAgo dateString={created_at} />
-				</p>
+				<div className="flex justify-between items-center">
+					<p className="text-muted-foreground text-sm mb-1">
+						{!username ? "Anonymous" : username} -{" "}
+						<TimeAgo dateString={created_at} />
+					</p>
+					{currentUser && currentUser.id === user_id && (
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<Button size="icon">
+									<Trash2 />
+								</Button>
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogTitle className="text-xl font-bold">
+									Are you absolutely sure?
+								</AlertDialogTitle>
+								<AlertDialogDescription className="text-md text-muted-foreground">
+									This action can not be undone. This will permanently delete
+									your thread.
+								</AlertDialogDescription>
+								<AlertDialogFooter>
+									<AlertDialogCancel className="uppercase font-semibold">
+										Cancel
+									</AlertDialogCancel>
+									<AlertDialogAction
+										onClick={deleteThread}
+										className="uppercase font-bold transition-all duration-200"
+									>
+										Continue
+										{loadingDelete && <LoaderCircle className="animate-spin" />}
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
+					)}
+				</div>
 				<h2 className="font-bold text-2xl md:text-4xl">{title}</h2>
 				<div
 					className="mt-0 tiptap text-muted-foreground"
