@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/security/noDangerouslySetInnerHtml: <The content of the comments contains HTML, and we are sanitizing it before displaying it> */
 /** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
 "use client";
+import type { User } from "@supabase/supabase-js";
 import DOMPurify from "dompurify";
 import {
 	ArrowBigDown,
@@ -20,6 +21,7 @@ import routes from "@/lib/routes";
 import { calculateScore } from "@/lib/services/handleLikes";
 import useAuth from "@/lib/stores/useAuth";
 import { supabase } from "@/lib/supabase/client";
+import DeleteModal from "../DeleteModal";
 import { TiptapEditor } from "../RichTextEditor";
 import TimeAgo from "../TimeAgo";
 
@@ -27,6 +29,7 @@ interface ThreadCommentsProps {
 	initialComments: CorrectedCommentType[];
 	thread_id: number;
 	comment_count: number;
+	currentUser: User | null;
 }
 
 const MAX_COMMENTS = 5;
@@ -35,12 +38,14 @@ const ThreadComments = ({
 	initialComments,
 	thread_id,
 	comment_count,
+	currentUser,
 }: ThreadCommentsProps) => {
 	const { user } = useAuth();
 	const [loading, setLoading] = useState(false);
 	const [loadingComments, setLoadingComments] = useState(false);
 	const [content, setContent] = useState("");
 	const [comments, setComments] = useState<CorrectedCommentType[]>([]);
+	const [loadingDelete, setLoadingDelete] = useState(false);
 
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(
@@ -154,6 +159,26 @@ const ThreadComments = ({
 		}
 	};
 
+	const deleteThread = async (commentId: number) => {
+		setLoadingDelete(true);
+		try {
+			const { error } = await supabase
+				.from("posts")
+				.delete()
+				.match({ id: commentId });
+			if (error) throw new Error();
+
+			toast.success("Comment deleted successfully");
+			fetchComments(0);
+		} catch (err) {
+			toast.error(
+				"There was an error deleting the comment, please try again later",
+			);
+		} finally {
+			setLoadingDelete(false);
+		}
+	};
+
 	useEffect(() => {
 		if (initialComments.length > 0) {
 			const commentsContent = initialComments.map((comment) => {
@@ -213,18 +238,27 @@ const ThreadComments = ({
 					comments.map((comment) => {
 						return (
 							<Card key={comment.id} className="p-4 flex flex-col mb-7 gap-5">
-								<p className="text-muted-foreground text-sm">
-									{comment.username && (
-										<Link
-											className="font-semibold text-foreground hover:underline z-10 relative"
-											href={`${routes.user}/${comment.username}`}
-										>
-											{comment.username}
-										</Link>
+								<div className="flex justify-between items-center">
+									<p className="text-muted-foreground text-sm">
+										{comment.username && (
+											<Link
+												className="font-semibold text-foreground hover:underline z-10 relative"
+												href={`${routes.user}/${comment.username}`}
+											>
+												{comment.username}
+											</Link>
+										)}
+										{!comment.username && "Anonymous"} -{" "}
+										<TimeAgo dateString={comment.created_at} />
+									</p>
+									{currentUser && currentUser.id === comment.user_id && (
+										<DeleteModal
+											loading={loadingDelete}
+											onClick={() => deleteThread(comment.id)}
+											description="This action cannot be undone. This will permanently delete your comment."
+										/>
 									)}
-									{!comment.username && "Anonymous"} -{" "}
-									<TimeAgo dateString={comment.created_at} />
-								</p>
+								</div>
 								<div
 									className="mt-0 tiptap"
 									dangerouslySetInnerHTML={{ __html: comment.content }}

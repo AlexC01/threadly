@@ -34,6 +34,7 @@ import useAuth from "@/lib/stores/useAuth";
 import { supabase } from "@/lib/supabase/client";
 import TimeAgo from "../TimeAgo";
 import ThreadComments from "./ThreadComments";
+import DeleteModal from "../DeleteModal";
 
 interface ThreadDetailProps {
 	thread: CorrectedThreadSingle;
@@ -137,34 +138,7 @@ const ThreadDetail = ({ thread, comments, currentUser }: ThreadDetailProps) => {
 						<TimeAgo dateString={created_at} />
 					</p>
 					{currentUser && currentUser.id === user_id && (
-						<AlertDialog>
-							<AlertDialogTrigger asChild>
-								<Button size="icon">
-									<Trash2 />
-								</Button>
-							</AlertDialogTrigger>
-							<AlertDialogContent>
-								<AlertDialogTitle className="text-xl font-bold">
-									Are you absolutely sure?
-								</AlertDialogTitle>
-								<AlertDialogDescription className="text-md text-muted-foreground">
-									This action can not be undone. This will permanently delete
-									your thread.
-								</AlertDialogDescription>
-								<AlertDialogFooter>
-									<AlertDialogCancel className="uppercase font-semibold">
-										Cancel
-									</AlertDialogCancel>
-									<AlertDialogAction
-										onClick={deleteThread}
-										className="uppercase font-bold transition-all duration-200"
-									>
-										Continue
-										{loadingDelete && <LoaderCircle className="animate-spin" />}
-									</AlertDialogAction>
-								</AlertDialogFooter>
-							</AlertDialogContent>
-						</AlertDialog>
+						<DeleteModal loading={loadingDelete} onClick={deleteThread}  description="This action cannot be undone. This will permanently delete your thread and remove it from our servers."/>
 					)}
 				</div>
 				<h2 className="font-bold text-2xl md:text-4xl">{title}</h2>
@@ -206,6 +180,7 @@ const ThreadDetail = ({ thread, comments, currentUser }: ThreadDetailProps) => {
 				initialComments={comments}
 				thread_id={id}
 				comment_count={comment_count}
+				currentUser={currentUser}
 			/>
 		</>
 	);
