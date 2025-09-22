@@ -1,5 +1,6 @@
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import ThreadDetail from "@/components/Threads/ThreadDetail";
 import routes from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
@@ -16,9 +17,9 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 		})
 		.single();
 
-	if (error || !thread) {
-		return <div>Thread Not Found</div>;
-	}
+	if (!thread) notFound();
+
+	if (error) throw new Error();
 
 	const { data: posts } = await supabase
 		.rpc("get_posts_for_thread", {
