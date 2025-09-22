@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import ProfileHeader from "@/components/User/Profile/ProfileHeader";
 import UserContent from "@/components/User/UserContent";
 import type {
@@ -18,7 +19,9 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 		.eq("username", slug)
 		.single();
 
-	if (!profile || error) throw new Error();
+	if (!profile) notFound();
+
+	if (error) throw new Error();
 
 	const {
 		data: { user },
