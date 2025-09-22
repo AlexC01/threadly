@@ -1,28 +1,16 @@
 /** biome-ignore-all lint/security/noDangerouslySetInnerHtml: <Im already cleaning the HTML> */
 "use client";
 
-import { AlertDialogTitle } from "@radix-ui/react-alert-dialog";
 import type { User } from "@supabase/supabase-js";
 import DOMPurify from "dompurify";
 import {
 	ArrowBigDown,
 	ArrowBigUp,
 	Bookmark,
-	LoaderCircle,
-	Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type {
