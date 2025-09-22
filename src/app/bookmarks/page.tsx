@@ -20,9 +20,14 @@ const page = async () => {
 		);
 	}
 
-	const { data: threads } = await supabase.rpc("get_bookmarked_threads", {
-		current_user_id: data.user.id,
-	});
+	const { data: threads, error } = await supabase.rpc(
+		"get_bookmarked_threads",
+		{
+			current_user_id: data.user.id,
+		},
+	);
+
+	if (error) throw new Error();
 
 	return (
 		<main className="min-h-screen">
