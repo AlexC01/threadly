@@ -1,4 +1,4 @@
-import type { Database } from "./supabase";
+import type { Database, Tables } from "./supabase";
 
 export type ThreadWithStats =
 	Database["public"]["Functions"]["get_threads_with_stats"]["Returns"][number];
@@ -47,3 +47,12 @@ export type CorrectedUserCommentsType = Omit<UserCommentsType, "user_vote"> & {
 
 export type UserConversationsType =
 	Database["public"]["Functions"]["get_user_conversations"]["Returns"][number];
+
+export type MessageWithUsername = Tables<"messages"> & {
+	profiles: {
+		username: string | null;
+	} | null;
+};
+
+export type UsernameFromConversation =
+	Database["public"]["Functions"]["get_conversation_participant"]["Returns"][number];

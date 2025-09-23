@@ -328,6 +328,13 @@ export type Database = {
           vote_count: number
         }[]
       }
+      get_conversation_participant: {
+        Args: { conversation_id_input: number; current_user_id: string }
+        Returns: {
+          id: string
+          username: string
+        }[]
+      }
       get_posts_by_user: {
         Args: { current_user_id?: string; user_id_input: string }
         Returns: {
