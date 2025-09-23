@@ -44,3 +44,6 @@ export type UserCommentsType =
 export type CorrectedUserCommentsType = Omit<UserCommentsType, "user_vote"> & {
 	user_vote: number | null;
 };
+
+export type UserConversationsType =
+	Database["public"]["Functions"]["get_user_conversations"]["Returns"][number];
