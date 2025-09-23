@@ -400,6 +400,16 @@ export type Database = {
           vote_count: number
         }[]
       }
+      get_user_conversations: {
+        Args: { current_user_id: string }
+        Returns: {
+          conversation_id: number
+          last_message_content: string
+          last_message_created_at: string
+          other_participant_id: string
+          other_participant_username: string
+        }[]
+      }
       get_user_stats: {
         Args: { user_id_input: string }
         Returns: {
