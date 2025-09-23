@@ -23,24 +23,24 @@ const layout = async ({
 	});
 
 	return (
-		<main className="max-w-7xl mx-auto py-8 flex flex-col h-[calc(100vh-4rem)]">
+		<main className="max-w-7xl mx-auto py-8 flex flex-col h-screen">
 			<div className="text-center py-8 px-4">
 				<h1 className="text-5xl font-bold md:text-7xl tracking-tighter">
 					Your Messages
 				</h1>
 			</div>
-			<div className="mt-10 px-4 md:px-8 flex-1">
-				<ResizablePanelGroup
-					direction="horizontal"
-					className="rounded-lg border"
-				>
-					<ResizablePanel defaultSize={30}>
-						<SidebarMessages messages={conversations ?? []} />
-					</ResizablePanel>
-					<ResizableHandle disabled />
-					<ResizablePanel defaultSize={70}>{children}</ResizablePanel>
-				</ResizablePanelGroup>
-			</div>
+			<ResizablePanelGroup
+				direction="horizontal"
+				className="rounded-lg border flex-1 min-h-0"
+			>
+				<ResizablePanel defaultSize={30} minSize={25}>
+					<SidebarMessages messages={conversations ?? []} />
+				</ResizablePanel>
+				<ResizableHandle disabled />
+				<ResizablePanel defaultSize={70} minSize={30}>
+					{children}
+				</ResizablePanel>
+			</ResizablePanelGroup>
 		</main>
 	);
 };
