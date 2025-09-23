@@ -110,7 +110,9 @@ const Navbar = ({ user }: NavbarProps) => {
 								<DropdownMenuItem asChild>
 									<Link href={routes.bookmarks}>Bookmarks</Link>
 								</DropdownMenuItem>
-								<DropdownMenuItem>Settings</DropdownMenuItem>
+								<DropdownMenuItem asChild>
+									<Link href={routes.messages}>Messages</Link>
+								</DropdownMenuItem>
 								<DropdownMenuSeparator />
 								<DropdownMenuItem
 									onClick={logOut}

@@ -8,9 +8,14 @@ const routes = {
 	guidelines: "/guidelines",
 	thread: "/thread",
 	createThread: "/thread/create",
+	messages: "/messages",
 };
 
 export const publicRoutes = [routes.account];
-export const protectedRoutes = [routes.profile, routes.bookmarks];
+export const protectedRoutes = [
+	routes.profile,
+	routes.bookmarks,
+	routes.messages,
+];
 
 export default routes;
