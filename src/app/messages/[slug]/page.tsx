@@ -1,6 +1,6 @@
 import ChatWindow from "@/components/Messages/ChatWindow";
 import type {
-	MessageWithUsername,
+	MessagesArray,
 	UsernameFromConversation,
 } from "@/lib/Models/BaseModels";
 import { createClient } from "@/lib/supabase/server";
@@ -16,8 +16,8 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 
 	if (!user || error) throw new Error();
 
-	let username: UsernameFromConversation | null = null;
-	let conversationsMessages: MessageWithUsername[] | null = null;
+	let otherUser: UsernameFromConversation | null = null;
+	let conversationsMessages: MessagesArray[] | null = null;
 
 	try {
 		const [usernameResp, conversationResp] = await Promise.all([
@@ -29,12 +29,12 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 				.single(),
 			supabase
 				.from("messages")
-				.select("*, profiles(username)")
+				.select("*")
 				.eq("conversation_id", +slug)
 				.order("created_at", { ascending: true }),
 		]);
 
-		username = usernameResp.data;
+		otherUser = usernameResp.data;
 		conversationsMessages = conversationResp.data;
 	} catch (err) {
 		throw new Error();
@@ -43,8 +43,9 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 	return (
 		<ChatWindow
 			conversation={conversationsMessages ?? []}
-			username={username ? username.username : ""}
+			otherUser={otherUser ?? { id: "", username: "" }}
 			currentUserId={user.id}
+			conversation_id={slug}
 		/>
 	);
 };
