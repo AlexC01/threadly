@@ -48,11 +48,7 @@ export type CorrectedUserCommentsType = Omit<UserCommentsType, "user_vote"> & {
 export type UserConversationsType =
 	Database["public"]["Functions"]["get_user_conversations"]["Returns"][number];
 
-export type MessageWithUsername = Tables<"messages"> & {
-	profiles: {
-		username: string | null;
-	} | null;
-};
+export type MessagesArray = Tables<"messages">;
 
 export type UsernameFromConversation =
 	Database["public"]["Functions"]["get_conversation_participant"]["Returns"][number];
