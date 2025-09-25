@@ -52,9 +52,14 @@ const page = async () => {
 		<main className="min-h-screen">
 			<div className="max-w-7xl mx-auto py-12 md:py-16">
 				<ProfileHeader
-					userInfo={{ username: getName(), created_at: user.created_at }}
+					userInfo={{
+						username: getName(),
+						created_at: user.created_at,
+						id: user.id,
+					}}
 					stats={stats}
 					edit
+					currentUser={user}
 				/>
 				<UserContent
 					initialThreads={threads || []}

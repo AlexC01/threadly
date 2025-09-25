@@ -58,9 +58,11 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 					userInfo={{
 						username: profile.username ?? "Anonymous",
 						created_at: profile.created_at ?? "",
+						id: profile.id,
 					}}
 					stats={stats}
 					edit={user ? user.id === profile.id : false}
+					currentUser={user}
 				/>
 				<UserContent
 					initialThreads={threads || []}
