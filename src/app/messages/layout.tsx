@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import LoadingSidebarMessage from "@/components/Loadings/LoadingSidebarMessage";
 import SidebarMessages from "@/components/Messages/SidebarMessages";
 import {
 	ResizableHandle,
@@ -18,10 +20,6 @@ const layout = async ({
 
 	if (!user || error) throw new Error();
 
-	const { data: conversations } = await supabase.rpc("get_user_conversations", {
-		current_user_id: user.id,
-	});
-
 	return (
 		<main className="max-w-7xl mx-auto py-8 flex flex-col h-screen">
 			<div className="text-center py-8 px-4">
@@ -34,7 +32,9 @@ const layout = async ({
 				className="rounded-lg border flex-1 min-h-0"
 			>
 				<ResizablePanel defaultSize={30} minSize={25}>
-					<SidebarMessages messages={conversations ?? []} />
+					<Suspense fallback={<LoadingSidebarMessage />}>
+						<SidebarMessages user={user} />
+					</Suspense>
 				</ResizablePanel>
 				<ResizableHandle disabled />
 				<ResizablePanel defaultSize={70} minSize={30}>
