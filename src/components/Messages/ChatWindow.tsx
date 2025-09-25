@@ -2,7 +2,8 @@
 "use client";
 
 import { format } from "date-fns";
-import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useChatScroll } from "@/customHooks/useChatScroll";
 import {
 	shouldShowDateDivider,
@@ -12,6 +13,7 @@ import type {
 	MessagesArray,
 	UsernameFromConversation,
 } from "@/lib/Models/BaseModels";
+import routes from "@/lib/routes";
 import { supabase } from "@/lib/supabase/client";
 import TimeAgo from "../TimeAgo";
 import ChatBox from "./ChatBox";
@@ -89,7 +91,15 @@ const ChatWindow = ({
 	return (
 		<div className="flex flex-col h-full">
 			<div className="p-4 border-b">
-				<p className="font-semibold text-lg">Chat with {otherUser.username}</p>
+				<p className="text-lg">
+					Chat with{" "}
+					<Link
+						className="font-bold underline"
+						href={`${routes.user}/${otherUser.username}`}
+					>
+						{otherUser.username}
+					</Link>
+				</p>
 			</div>
 
 			<div

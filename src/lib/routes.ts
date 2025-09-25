@@ -9,6 +9,7 @@ const routes = {
 	thread: "/thread",
 	createThread: "/thread/create",
 	messages: "/messages",
+	search: "/search",
 };
 
 export const publicRoutes = [routes.account];

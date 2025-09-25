@@ -39,6 +39,7 @@ interface NavbarProps {
 const Navbar = ({ user }: NavbarProps) => {
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
+	const [searchValue, setSearchValue] = useState("");
 
 	const logOut = async () => {
 		setLoading(true);
@@ -71,6 +72,11 @@ const Navbar = ({ user }: NavbarProps) => {
 
 	const userInitials = getInitials();
 
+	const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		router.push(`${routes.search}?q=${searchValue}`);
+	};
+
 	return (
 		<header className="sticky top-0 z-50 w-full border-b-2 border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
 			<div className="px-6 2xl:px-0 max-w-7xl flex h-16 justify-between items-center mx-auto">
@@ -82,8 +88,15 @@ const Navbar = ({ user }: NavbarProps) => {
 				</div>
 				<div className="hidden md:flex flex-1 justify-center px-8">
 					<div className="relative w-full max-w-md">
-						<Input placeholder="Search threads..." className="pl-10" />
-						<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
+						<form onSubmit={handleSearch}>
+							<Input
+								placeholder="Search threads..."
+								className="pl-10"
+								value={searchValue}
+								onChange={(e) => setSearchValue(e.target.value)}
+							/>
+							<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
+						</form>
 					</div>
 				</div>
 				<div className="hidden md:flex items-center space-x-4">
