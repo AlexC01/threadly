@@ -1,15 +1,17 @@
-import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import routes from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 import TimeAgo from "../TimeAgo";
 
-interface SidebarMessagesProps {
-	user: User;
-}
-
-const SidebarMessages = async ({ user }: SidebarMessagesProps) => {
+const SidebarMessages = async () => {
 	const supabase = await createClient();
+
+	const {
+		data: { user },
+		error,
+	} = await supabase.auth.getUser();
+
+	if (!user || error) throw new Error();
 
 	const { data: messages } = await supabase.rpc("get_user_conversations", {
 		current_user_id: user.id,

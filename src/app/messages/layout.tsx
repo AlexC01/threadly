@@ -6,20 +6,8 @@ import {
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { createClient } from "@/lib/supabase/server";
 
-const layout = async ({
-	children,
-}: Readonly<{ children: React.ReactNode }>) => {
-	const supabase = await createClient();
-
-	const {
-		data: { user },
-		error,
-	} = await supabase.auth.getUser();
-
-	if (!user || error) throw new Error();
-
+const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 	return (
 		<main className="max-w-7xl mx-auto py-8 flex flex-col h-screen">
 			<div className="text-center py-8 px-4">
@@ -33,7 +21,7 @@ const layout = async ({
 			>
 				<ResizablePanel defaultSize={30} minSize={25}>
 					<Suspense fallback={<LoadingSidebarMessage />}>
-						<SidebarMessages user={user} />
+						<SidebarMessages />
 					</Suspense>
 				</ResizablePanel>
 				<ResizableHandle disabled />
