@@ -52,3 +52,13 @@ export type MessagesArray = Tables<"messages">;
 
 export type UsernameFromConversation =
 	Database["public"]["Functions"]["get_conversation_participant"]["Returns"][number];
+
+export type SearchThreadsType =
+	Database["public"]["Functions"]["search_threads"]["Returns"][number];
+
+export type CorrectedSearchThreadsType = Omit<
+	SearchThreadsType,
+	"user_vote"
+> & {
+	user_vote: number | null;
+};

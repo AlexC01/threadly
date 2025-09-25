@@ -276,6 +276,7 @@ export type Database = {
         Row: {
           content: string
           created_at: string
+          fts: unknown | null
           id: number
           slug: string
           title: string
@@ -284,6 +285,7 @@ export type Database = {
         Insert: {
           content: string
           created_at?: string
+          fts?: unknown | null
           id?: number
           slug: string
           title: string
@@ -292,6 +294,7 @@ export type Database = {
         Update: {
           content?: string
           created_at?: string
+          fts?: unknown | null
           id?: number
           slug?: string
           title?: string
@@ -435,6 +438,22 @@ export type Database = {
       is_participant: {
         Args: { conversation_id_input: number; user_id_input: string }
         Returns: boolean
+      }
+      search_threads: {
+        Args: { current_user_id?: string; search_term: string }
+        Returns: {
+          comment_count: number
+          content: string
+          created_at: string
+          id: number
+          is_bookmarked: boolean
+          slug: string
+          title: string
+          user_id: string
+          user_vote: number
+          username: string
+          vote_count: number
+        }[]
       }
     }
     Enums: {
