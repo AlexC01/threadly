@@ -312,6 +312,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_conversation_and_send_message: {
+        Args: {
+          message_content: string
+          receiver_id_input: string
+          sender_id_input: string
+        }
+        Returns: number
+      }
       get_bookmarked_threads: {
         Args: { current_user_id: string }
         Returns: {
@@ -423,6 +431,10 @@ export type Database = {
           post_count: number
           thread_count: number
         }[]
+      }
+      is_participant: {
+        Args: { conversation_id_input: number; user_id_input: string }
+        Returns: boolean
       }
     }
     Enums: {
