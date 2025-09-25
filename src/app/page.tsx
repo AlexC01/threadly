@@ -58,6 +58,7 @@ export default async function Home() {
 							<li>Bookmark favorite threads</li>
 							<li>Manage your own posts</li>
 							<li>Get a persistent username ID</li>
+							<li>Send messages to other users</li>
 						</ul>
 						<Button
 							className="mt-2 uppercase font-bold"
