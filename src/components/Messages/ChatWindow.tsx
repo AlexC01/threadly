@@ -3,6 +3,7 @@
 
 import { format } from "date-fns";
 import { useEffect, useRef, useState } from "react";
+import { useChatScroll } from "@/customHooks/useChatScroll";
 import {
 	shouldShowDateDivider,
 	shouldShowTimestamp,
@@ -29,49 +30,57 @@ const ChatWindow = ({
 	conversation_id,
 }: ChatWindowProps) => {
 	const [messages, setMessages] = useState<MessagesArray[]>(conversation);
-	const scrollRef = useRef<HTMLDivElement>(null);
+	const { containerRef, scrollToBottom } = useChatScroll();
 
 	useEffect(() => {
-		// subscribe to new message inserts
-		const channel = supabase
-			.channel(`realtime:messages:${conversation_id}`)
-			.on(
-				"postgres_changes",
-				{
-					event: "INSERT",
-					schema: "public",
-					table: "messages",
-					filter: `conversation_id=eq.${conversation_id}`,
-				},
-				(payload) => {
-					const newMessage = payload.new as MessagesArray;
-					setMessages((prev) => {
-						if (prev.some((m) => m.id === newMessage.id)) return prev;
-						const withoutOptimistic = prev.filter(
-							(m) =>
-								!(
-									m.id < 0 &&
-									m.sender_id === newMessage.sender_id &&
-									m.content === newMessage.content
-								),
-						);
+		let channel: ReturnType<typeof supabase.channel> | null = null;
+		async function init() {
+			const {
+				data: { session },
+			} = await supabase.auth.getSession();
 
-						return [...withoutOptimistic, newMessage];
-					});
-				},
-			)
-			.subscribe();
+			if (!session) return;
 
+			supabase.realtime.setAuth(session.access_token);
+
+			channel = supabase
+				.channel(`public:messages:conversation_id=eq.${conversation_id}`)
+				.on(
+					"postgres_changes",
+					{
+						event: "INSERT",
+						schema: "public",
+						table: "messages",
+						filter: `conversation_id=eq.${conversation_id}`,
+					},
+					(payload) => {
+						const newMessage = payload.new as MessagesArray;
+						setMessages((prev) => {
+							if (prev.some((m) => m.id === newMessage.id)) return prev;
+							const withoutOptimistic = prev.filter(
+								(m) =>
+									!(
+										m.id < 0 &&
+										m.sender_id === newMessage.sender_id &&
+										m.content === newMessage.content
+									),
+							);
+
+							return [...withoutOptimistic, newMessage];
+						});
+					},
+				)
+				.subscribe();
+		}
+		init();
 		return () => {
-			supabase.removeChannel(channel);
+			if (channel) supabase.removeChannel(channel);
 		};
 	}, [conversation_id]);
 
 	useEffect(() => {
-		if (scrollRef.current) {
-			scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-		}
-	}, [messages]);
+		scrollToBottom();
+	}, [messages, scrollToBottom]);
 
 	const addOptimisticMessage = (message: MessagesArray) => {
 		setMessages((prev) => [...prev, message]);
@@ -83,7 +92,10 @@ const ChatWindow = ({
 				<p className="font-semibold text-lg">Chat with {otherUser.username}</p>
 			</div>
 
-			<div className="flex-1 p-4 min-h-0 overflow-y-auto custom-scrollbar space-y-4">
+			<div
+				className="flex-1 p-4 min-h-0 overflow-y-auto custom-scrollbar space-y-4"
+				ref={containerRef}
+			>
 				{messages.map((message, index) => {
 					const prevMessage = messages[index - 1];
 					const nextMessage = messages[index + 1];
