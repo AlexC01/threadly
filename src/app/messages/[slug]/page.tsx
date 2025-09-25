@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import ChatWindow from "@/components/Messages/ChatWindow";
 import type {
 	MessagesArray,
@@ -37,8 +38,15 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 		otherUser = usernameResp.data;
 		conversationsMessages = conversationResp.data;
 	} catch (err) {
-		throw new Error();
+		throw new Error("Error");
 	}
+
+	if (
+		!otherUser ||
+		!conversationsMessages ||
+		conversationsMessages.length === 0
+	)
+		notFound();
 
 	return (
 		<ChatWindow
