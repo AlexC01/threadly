@@ -46,8 +46,8 @@ const SignUp = () => {
 				options: {
 					data: {
 						username: values.username,
-						first_name: values.firstName,
-						last_name: values.lastName,
+						firstName: values.firstName,
+						lastName: values.lastName,
 					},
 				},
 			});

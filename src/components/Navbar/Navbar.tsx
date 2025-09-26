@@ -62,8 +62,8 @@ const Navbar = ({ user }: NavbarProps) => {
 
 	const getInitials = () => {
 		if (!user) return null;
-		const firstName = user.user_metadata?.first_name?.[0];
-		const lastName = user.user_metadata?.last_name?.[0];
+		const firstName = user.user_metadata?.firstName?.[0];
+		const lastName = user.user_metadata?.lastName?.[0];
 
 		if (firstName && lastName) return `${firstName}${lastName}`;
 
