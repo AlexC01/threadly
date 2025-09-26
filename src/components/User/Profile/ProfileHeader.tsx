@@ -4,7 +4,6 @@ import {
 	LoaderCircle,
 	MessageSquareText,
 	Send,
-	SquarePen,
 	User as UserIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -20,6 +19,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import type { UserStatsType } from "@/lib/Models/BaseModels";
 import { supabase } from "@/lib/supabase/client";
+import EditProfile from "./EditProfile";
 
 interface ProfileHeaderProps {
 	userInfo: { username: string; created_at: string; id: string };
@@ -86,11 +86,7 @@ const ProfileHeader = ({
 							Replies
 						</span>
 					</div>
-					{edit && (
-						<Button size="icon" className="absolute -top-2 right-5">
-							<SquarePen />
-						</Button>
-					)}
+					{edit && <EditProfile />}
 					{!edit && currentUser && (
 						<Popover>
 							<PopoverTrigger asChild>
