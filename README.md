@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Threadly 💬
 
-## Getting Started
+**Threadly** is a modern, feature-rich social discussion board inspired by platforms like Reddit but with a clean, minimalist design. Users can create threads, post replies with a rich text editor, vote on content, and engage in real-time private messaging. This project is a full-stack application built with Next.js and Supabase.
 
-First, run the development server:
+![Threadly Demo](./public/demo.gif)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This project is a complete social media platform with a wide range of features:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* **Full User Authentication:**
+    * Secure sign-up and log-in flows.
+    * Email confirmation for new users.
+    * Server-side session management (`@supabase/ssr`) for a flicker-free experience.
+    * Protected routes and guest-only routes via Next.js Middleware.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* **Content & Interaction:**
+    * Users can create new discussion threads with a rich text editor (Tiptap).
+    * Anonymous posting is enabled for both guests and logged-in users.
+    * Robust voting system (upvote/downvote) for both threads and comments.
+    * Optimistic UI updates for voting, providing an instantaneous user experience.
+    * Bookmarking system for users to save their favorite threads.
 
-## Learn More
+* **Real-time Functionality:**
+    * **Private Messaging:** A complete, real-time chat system between users, built with Supabase Realtime.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* **User Profiles:**
+    * Publicly viewable user profiles with stats (thread/post counts) and content tabs.
+    * Private profile page for the logged-in user with an "Edit Profile" feature using Server Actions.
