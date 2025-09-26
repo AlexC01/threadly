@@ -23,5 +23,12 @@ export const logInSchema = z.object({
 		.regex(/[0-9]/, "Password must contain at least one number"),
 });
 
+export const profileSchema = z.object({
+	firstName: z.string().nonempty("First name is required"),
+	lastName: z.string().nonempty("Last name is required"),
+	username: z.string().min(3, "Username must be at least 3 characters long"),
+});
+export type EditUserData = z.infer<typeof profileSchema>;
+
 export type SignUpFormData = z.infer<typeof signUpSchema>;
 export type LogInFormData = z.infer<typeof logInSchema>;
