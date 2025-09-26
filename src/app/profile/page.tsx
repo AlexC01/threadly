@@ -15,7 +15,16 @@ const page = async () => {
 		error,
 	} = await supabase.auth.getUser();
 
-	if (!user || error) throw new Error();
+	if (!user || error) throw new Error("Error getting the user info");
+
+	const { data: profile, error: profileError } = await supabase
+		.from("profiles")
+		.select("*")
+		.eq("id", user.id)
+		.single();
+
+	if (!profile || profileError)
+		throw new Error("Error getting the profile info");
 
 	let stats: UserStatsType | null = null;
 	let threads: CorrectedUserThreadsType[] | null = null;
@@ -41,19 +50,14 @@ const page = async () => {
 		throw new Error();
 	}
 
-	const getName = () => {
-		const username = user.user_metadata?.username ?? "";
-
-		if (username !== "") return username;
-		return "";
-	};
-
 	return (
 		<main className="min-h-screen">
 			<div className="max-w-7xl mx-auto py-12 md:py-16">
 				<ProfileHeader
 					userInfo={{
-						username: getName(),
+						username: profile.username ?? "",
+						firstName: profile.first_name ?? "",
+						lastName: profile.last_name ?? "",
 						created_at: user.created_at,
 						id: user.id,
 					}}
