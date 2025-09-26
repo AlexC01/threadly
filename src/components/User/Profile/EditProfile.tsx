@@ -19,11 +19,17 @@ import { Label } from "@/components/ui/label";
 
 const initialState: any = { errors: null, success: false };
 
-  interface EditProfileProps {
-	username: string;
+interface EditProfileProps {
+	initialUsername: string;
+	initialFirstName: string;
+	initialLastName: string;
 }
 
-const EditProfile = () => {
+const EditProfile = ({
+	initialUsername,
+	initialFirstName,
+	initialLastName,
+}: EditProfileProps) => {
 	const [openModal, setOpenModal] = useState(false);
 	const [state, formAction, pending] = useActionState(
 		updateUserProfile,
@@ -56,7 +62,11 @@ const EditProfile = () => {
 							name="username"
 							id={username}
 							className="mb-2 mt-2 placeholder:text-gray-400"
-							defaultValue={state.submittedData?.username}
+							defaultValue={
+								state.submittedData
+									? state.submittedData.username
+									: initialUsername
+							}
 						/>
 						<p
 							className="text-xs text-red-400 h-3 flex gap-1 font-bold"
@@ -76,7 +86,11 @@ const EditProfile = () => {
 							<Input
 								placeholder="John"
 								type="text"
-								defaultValue={state.submittedData?.firstName}
+								defaultValue={
+									state.submittedData
+										? state.submittedData.firstName
+										: initialFirstName
+								}
 								name="firstName"
 								id={firstName}
 								className="mb-3 mt-2 placeholder:text-gray-400"
@@ -99,7 +113,11 @@ const EditProfile = () => {
 								placeholder="Doe"
 								type="text"
 								id={lastName}
-								defaultValue={state.submittedData?.lastName}
+								defaultValue={
+									state.submittedData
+										? state.submittedData.lastName
+										: initialLastName
+								}
 								name="lastName"
 								className="mb-3 mt-2 placeholder:text-gray-400"
 							/>

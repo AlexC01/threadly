@@ -15,7 +15,7 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 
 	const { data: profile, error } = await supabase
 		.from("profiles")
-		.select("id, username, created_at")
+		.select("*")
 		.eq("username", slug)
 		.single();
 
@@ -59,6 +59,8 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 						username: profile.username ?? "Anonymous",
 						created_at: profile.created_at ?? "",
 						id: profile.id,
+						firstName: profile.first_name ?? "",
+						lastName: profile.last_name ?? "",
 					}}
 					stats={stats}
 					edit={user ? user.id === profile.id : false}

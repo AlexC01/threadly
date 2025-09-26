@@ -22,7 +22,13 @@ import { supabase } from "@/lib/supabase/client";
 import EditProfile from "./EditProfile";
 
 interface ProfileHeaderProps {
-	userInfo: { username: string; created_at: string; id: string };
+	userInfo: {
+		username: string;
+		created_at: string;
+		id: string;
+		firstName: string;
+		lastName: string;
+	};
 	stats: UserStatsType | null;
 	edit: boolean;
 	currentUser: User | null;
@@ -86,7 +92,13 @@ const ProfileHeader = ({
 							Replies
 						</span>
 					</div>
-					{edit && <EditProfile />}
+					{edit && (
+						<EditProfile
+							initialFirstName={userInfo.firstName}
+							initialLastName={userInfo.lastName}
+							initialUsername={userInfo.username}
+						/>
+					)}
 					{!edit && currentUser && (
 						<Popover>
 							<PopoverTrigger asChild>
