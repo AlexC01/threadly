@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import z from "zod";
 import routes from "@/lib/routes";
 import { profileSchema } from "@/lib/schemas/userSchema";
@@ -32,7 +33,11 @@ export default async function updateUserProfile(
 			data: { user },
 		} = await supabase.auth.getUser();
 
-		if (!user) throw new Error("User is not connected");
+		if (!user)
+			return {
+				error: "You must be logged in to update your profile",
+				success: false,
+			};
 
 		const { error } = await supabase.auth.updateUser({
 			data: validatedFields.data,
@@ -42,15 +47,20 @@ export default async function updateUserProfile(
 
 		const { error: error2 } = await supabase
 			.from("profiles")
-			.update({ username: validatedFields.data.username })
+			.update({
+				username: validatedFields.data.username,
+				first_name: validatedFields.data.firstName,
+				last_name: validatedFields.data.lastName,
+			})
 			.eq("id", user.id);
 
 		if (error2) throw new Error("Error while updating information");
 
 		revalidatePath(routes.profile);
-		return { errors: null, success: true };
 	} catch (err) {
 		console.error("Error updating your profile");
 		throw err;
 	}
+
+	redirect(routes.profile);
 }
