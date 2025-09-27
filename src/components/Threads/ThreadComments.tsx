@@ -66,7 +66,7 @@ const ThreadComments = ({
 
 			if (error) throw new Error();
 			else {
-				const cleanComments = data.map((comment) => {
+				const cleanComments = data.map((comment: CorrectedCommentType) => {
 					const clean = DOMPurify.sanitize(comment.content);
 					return { ...comment, content: clean };
 				});

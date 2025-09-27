@@ -1,9 +1,9 @@
 import { isSameDay } from "date-fns";
-import type { MessageWithUsername } from "../Models/BaseModels";
+import type { MessagesArray } from "../Models/BaseModels";
 
 export function shouldShowTimestamp(
-	currentMsg: MessageWithUsername,
-	nextMsg?: MessageWithUsername,
+	currentMsg: MessagesArray,
+	nextMsg?: MessagesArray,
 ): boolean {
 	if (!nextMsg) {
 		return true;
@@ -21,8 +21,8 @@ export function shouldShowTimestamp(
 }
 
 export function shouldShowDateDivider(
-	currentMsg: MessageWithUsername,
-	prevMsg?: MessageWithUsername,
+	currentMsg: MessagesArray,
+	prevMsg?: MessagesArray,
 ): boolean {
 	if (!prevMsg) {
 		return true;
