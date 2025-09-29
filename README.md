@@ -1,6 +1,7 @@
 # Threadly 💬
 
 **Threadly** is a modern, feature-rich social discussion board inspired by platforms like Reddit but with a clean, minimalist design. Users can create threads, post replies with a rich text editor, vote on content, and engage in real-time private messaging. This project is a full-stack application built with Next.js and Supabase.
+Live: https://threadly-beta.vercel.app/
 
 ![Threadly Demo](./public/demo.gif)
 
