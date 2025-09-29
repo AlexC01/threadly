@@ -1,9 +1,11 @@
 "use client";
 import type { User } from "@supabase/supabase-js";
 import {
+	Bookmark,
 	LoaderCircle,
 	Menu,
 	MessageSquareIcon,
+	MessagesSquare,
 	Search,
 	User as UserIcon,
 } from "lucide-react";
@@ -31,6 +33,7 @@ import {
 } from "@/components/ui/sheet";
 import routes from "@/lib/routes";
 import { supabase } from "@/lib/supabase/client";
+import { Separator } from "../ui/separator";
 
 interface NavbarProps {
 	user: User | null;
@@ -166,7 +169,61 @@ const Navbar = ({ user }: NavbarProps) => {
 									<Input placeholder="Search threads..." className="pl-10" />
 									<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
 								</div>
-								<Button variant="default">Sign Up / Log In</Button>
+								<Button variant="default" asChild>
+									<Link href={routes.createThread} prefetch={false}>
+										Create Thread
+									</Link>
+								</Button>
+								{user && (
+									<div className="mt-5 flex flex-col text-left gap-2">
+										<Separator />
+										<Link href={routes.profile}>
+											<Button
+												variant="outline"
+												className="flex items-center justify-between w-full"
+											>
+												Profile
+												<UserIcon />
+											</Button>
+										</Link>
+										<Link href={routes.bookmarks}>
+											<Button
+												variant="outline"
+												className="flex items-center justify-between w-full"
+											>
+												Bookmarks
+												<Bookmark />
+											</Button>
+										</Link>
+										<Link href={routes.messages}>
+											<Button
+												variant="outline"
+												className="flex items-center justify-between w-full"
+											>
+												Messages
+												<MessagesSquare />
+											</Button>
+										</Link>
+										<Separator />
+										<Button
+											onClick={logOut}
+											variant="destructive"
+											className="flex items-center justify-between"
+										>
+											Log Out
+											{loading && (
+												<LoaderCircle className="animate-spin text-red-500" />
+											)}
+										</Button>
+									</div>
+								)}
+								{!user && (
+									<Button asChild variant="outline">
+										<Link href={routes.account} prefetch={false}>
+											Sign Up / Log In
+										</Link>
+									</Button>
+								)}
 								<ThemeToggle />
 							</div>
 						</SheetContent>
